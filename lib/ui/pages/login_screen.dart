@@ -24,8 +24,8 @@ class LoginScreen extends ConsumerStatefulWidget {
 
 class LoginScreenState extends ConsumerState<LoginScreen> {
 
-  final etUserController = TextEditingController(text: 'cubetero_prueba');
-  final etPassController = TextEditingController(text: '1234');
+  final etUserController = TextEditingController();
+  final etPassController = TextEditingController();
 
 
   @override
@@ -69,6 +69,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
     }
 
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
       body: SingleChildScrollView(
         child: Stack(
           children: [

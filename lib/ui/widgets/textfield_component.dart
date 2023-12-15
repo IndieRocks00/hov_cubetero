@@ -9,9 +9,13 @@ class TextfieldComponent extends StatefulWidget {
   final TextEditingController controller;
   final String hint_label;
   final TextInputType textInputType ;
-  final bool obscureText;
+  late bool obscureText;
   final IconData? icon;
-  const TextfieldComponent({
+
+
+  bool _isObscure = true;
+
+  TextfieldComponent({
     Key? key,
     required this.controller,
     required this.hint_label,
@@ -41,13 +45,22 @@ class _TextfieldComponentState extends State<TextfieldComponent> {
       child: TextField(
         controller: widget.controller,
         maxLines: 1,
-        obscureText: widget.obscureText,
+        obscureText: widget._isObscure,
         keyboardType: widget.textInputType,
         decoration: InputDecoration(
             hintText: widget.hint_label,
             filled: true,
             fillColor: AppColors.textfield_background,
             prefixIcon: widget.icon != null ? Icon(widget.icon) : SizedBox(),
+            suffixIcon: widget.obscureText ? IconButton(
+              icon:  Icon(widget._isObscure ? Icons.visibility : Icons.visibility_off),
+              onPressed: () {
+                setState(() {
+                  var pass = widget._isObscure;
+                  widget._isObscure  = !pass ;
+                });
+              },
+            ) : SizedBox(),
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(5),
                 borderSide: const BorderSide(
