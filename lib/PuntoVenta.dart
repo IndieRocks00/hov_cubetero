@@ -130,7 +130,8 @@ class _PuntoVentaActivityState extends State<PuntoVentaActivity> {
                   nombre: data['productName'],
                   costo: double.parse(data['sku_monto']),
                   categoria: cat,
-                  sku: data['sku']
+                  sku: data['sku'],
+                  service: data['service']
               );
               listProductoAll.add(prodcutoVenta);
             });
@@ -1012,7 +1013,7 @@ class _PuntoVentaActivityState extends State<PuntoVentaActivity> {
                       NfcManager.instance.stopSession();
                       var arrayUser = getString(res);
                       print(arrayUser[0]);
-                      Tools().showMessageBox(context, arrayUser[0]);
+                      //Tools().showMessageBox(context, arrayUser[0]);
                       setState(() {
                         if(arrayUser == null){
                           _codeV = "";

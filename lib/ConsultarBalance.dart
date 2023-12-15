@@ -106,7 +106,7 @@ class _ConsultarBalanceState extends State<ConsultarBalance> {
             !banQR? SizedBox(height: 0,):
             Container(
               alignment: Alignment.center,
-              child: QrImage(data: _balance,
+              child: QrImageView(data: _balance,
                 size: MediaQuery.of(context).size.width/2,
               ),
             ),

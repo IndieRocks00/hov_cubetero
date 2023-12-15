@@ -1,23 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:indierocks_cubetero/CortesiaCliente.dart';
 import 'package:indierocks_cubetero/Login.dart';
+import 'package:indierocks_cubetero/ui/pages/splash_screen.dart';
 
 import 'Carrito.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  //runApp(MyApp());
+  await dotenv.load(fileName: "lib/core/env/.env");
+  runApp(ProviderScope(child: SplashScreen(),));
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+
+
   // This widget is the root of your application.solo fue el Ing Jaime
   @override
   Widget build(BuildContext context) {
+    MaterialColor white = const MaterialColor(
+      0xFFFFFFFF,
+      const <int, Color>{
+        50: const Color(0xFFFFFFFF),
+        100: const Color(0xFFFFFFFF),
+        200: const Color(0xFFFFFFFF),
+        300: const Color(0xFFFFFFFF),
+        400: const Color(0xFFFFFFFF),
+        500: const Color(0xFFFFFFFF),
+        600: const Color(0xFFFFFFFF),
+        700: const Color(0xFFFFFFFF),
+        800: const Color(0xFFFFFFFF),
+        900: const Color(0xFFFFFFFF),
+      },
+    );
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'HOV Cubetero',
       theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+        appBarTheme: AppBarTheme(color: Colors.white),
         // This is the theme of your application.
         //
         // Try running your application with "flutter run". You'll see the
@@ -27,7 +52,7 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: white,
       ),
       home: PCortesia(),
     );

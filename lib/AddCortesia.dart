@@ -28,7 +28,7 @@ import 'Utils/Encriptacion.dart';
 import 'Utils/ProgressDialog.dart';
 
 class AddCortesiaActivity extends StatefulWidget {
-  const AddCortesiaActivity({Key? key}) : super(key: key);
+  const AddCortesiaActivity({Key? key, }) : super(key: key);
 
   @override
   State<AddCortesiaActivity> createState() => _AddCortesiaActivityState();
@@ -38,7 +38,7 @@ class _AddCortesiaActivityState extends State<AddCortesiaActivity> {
 
 
   var selectedCategoria;
-  var selectedProducto;
+  late ProdcutoVenta selectedProducto = new ProdcutoVenta(nombre: "", costo: 0, categoria: new CategoriaModel(nombre: "", index: 0 ), sku: "", service: 0);
   List<CategoriaModel> listCategoria = [];
   List<ProdcutoVenta> listProducto = [];
   List<ProdcutoVenta> listProductoAll = [];
@@ -66,8 +66,14 @@ class _AddCortesiaActivityState extends State<AddCortesiaActivity> {
   var msgGetProducts = "";
 
   String name_user = "";
+  var product_select ;
+
+
 
   var dialogS;
+
+  _AddCortesiaActivityState();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -131,19 +137,23 @@ class _AddCortesiaActivityState extends State<AddCortesiaActivity> {
           for(Map<String,dynamic> data in json_list){
 
             if(mounted)setState(() {
+
               CategoriaModel cat = CategoriaModel(nombre: data['c'][0]['name'], index: data['c'][0]['ID']);
-              if(!listCategoria.any((element) => element.index == cat.index)){
-                listCategoria.add(cat);
-
-
+              if(cat.index == 264){
+                if(!listCategoria.any((element) => element.index == cat.index)){
+                  listCategoria.add(cat);
+                }
+                ProdcutoVenta prodcutoVenta = ProdcutoVenta(
+                    nombre: data['productName'],
+                    costo: double.parse(data['sku_monto']),
+                    categoria: cat,
+                    sku: data['sku'],
+                    service: data['service']
+                );
+                listProductoAll.add(prodcutoVenta);
               }
-              ProdcutoVenta prodcutoVenta = ProdcutoVenta(
-                  nombre: data['productName'],
-                  costo: double.parse(data['sku_monto']),
-                  categoria: cat,
-                  sku: data['sku']
-              );
-              listProductoAll.add(prodcutoVenta);
+
+
             });
 
           }
@@ -230,7 +240,7 @@ class _AddCortesiaActivityState extends State<AddCortesiaActivity> {
                     color: ColorsIndie.colorGC2.getColor(),
                     child: Row(
                       children: [
-                        Expanded(flex: 2, child:
+                        Expanded(flex: 1, child:
                         Center(
                           child: Image.asset("assets/images/foro_ir_white.png",
                             height: 150,
@@ -251,56 +261,67 @@ class _AddCortesiaActivityState extends State<AddCortesiaActivity> {
                       ],
                     ),
                   ),
-                  banGetProduct ? Container(
-                    padding: EdgeInsets.all(20),
-                    child: Column(
-                      children: [
-                        Text(msgGetProducts,
-                          style: TextStyle(fontWeight: FontWeight.bold,
-                            fontSize: 20,),
-                        ),
-                        SizedBox(height: 20,),
-                        Container(
-                          width: MediaQuery
-                              .of(context)
-                              .size
-                              .width,
-                          height: 55,
-                          decoration: const BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.black38,
-                                    blurRadius: 5,
-                                    offset: Offset(0, 5)
-                                )
-                              ]
-                          ),
-                          child: ElevatedButton(onPressed: () {
-                            getProductos(banInventario);
-                          },
-                            style: ElevatedButton.styleFrom(
-                                textStyle: TextStyle(
-                                    color: ColorsIndie.colorGC1.getColor(),
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18
+                  banGetProduct || listProductoAll.isEmpty?
+                      Column(
+                        children: [
+                          listProductoAll.isEmpty ? Text("No hay productos disponibles para agregar a cortesias, consulta con tu administrador.",
+                            style: TextStyle(fontWeight: FontWeight.bold,
+                              fontSize: 20,),
+                          ):  SizedBox(height: 20,),
+                          SizedBox(height: 20,),
+                          Container(
+                            padding: const EdgeInsets.all(20),
+                            child: Column(
+                              children: [
+                                Text(msgGetProducts,
+                                  style: TextStyle(fontWeight: FontWeight.bold,
+                                    fontSize: 20,),
                                 ),
-                                primary: ColorsIndie.colorGC2.getColor(),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                )
-                            ),
-                            child: Text("Reintentar", style: TextStyle(
-                                color: ColorsIndie.colorGC1.getColor())),
-                          ),
+                                SizedBox(height: 20,),
+                                Container(
+                                  width: MediaQuery
+                                      .of(context)
+                                      .size
+                                      .width,
+                                  height: 55,
+                                  decoration: const BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: Colors.black38,
+                                            blurRadius: 5,
+                                            offset: Offset(0, 5)
+                                        )
+                                      ]
+                                  ),
+                                  child: ElevatedButton(onPressed: () {
+                                    getProductos(banInventario);
+                                  },
+                                    style: ElevatedButton.styleFrom(
+                                        textStyle: TextStyle(
+                                            color: ColorsIndie.colorGC1.getColor(),
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18
+                                        ),
+                                        primary: ColorsIndie.colorGC2.getColor(),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(12),
+                                        )
+                                    ),
+                                    child: Text("Reintentar", style: TextStyle(
+                                        color: ColorsIndie.colorGC1.getColor())),
+                                  ),
 
-                        ),
-                      ],
-                    ),
-                  ) :
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      )
+                   :
                   SingleChildScrollView(
                     child: Column(
                       children: [
-                        Container(
+                        /*Container(
                           margin: const EdgeInsets.only(left: 20, right: 20),
 
                           height: 55,
@@ -361,11 +382,11 @@ class _AddCortesiaActivityState extends State<AddCortesiaActivity> {
                             },
                             itemCount: listCategoria.length,
                           ),
-                        ),
+                        ),*/
 
                         Container(
                           margin: const EdgeInsets.only(left: 20, right: 20),
-                          height: 80,
+                          height: 50,
                           width: MediaQuery.of(context).size.width,
                           child:
                           ListView.builder(
@@ -406,7 +427,7 @@ class _AddCortesiaActivityState extends State<AddCortesiaActivity> {
                                           ),
                                         ),
                                       ),
-                                      Container(
+                                      /*Container(
 
                                         child: Text(
                                           MoneyFormatter(
@@ -417,7 +438,7 @@ class _AddCortesiaActivityState extends State<AddCortesiaActivity> {
                                             fontSize: 25,
                                           ),
                                         ),
-                                      ),
+                                      ),*/
                                     ],
                                   ),
                                 ),
@@ -505,6 +526,12 @@ class _AddCortesiaActivityState extends State<AddCortesiaActivity> {
                                 child: Text(value!.nombre.toString())
                             );
                           }).toList(),),*/
+                        Row(
+                          children: [
+
+                            Expanded(child: Center(child: Text('${selectedProducto.nombre} ', style: TextStyle(fontSize: 20, )))),
+                          ],
+                        ),
                         Row(
                           children: [
                             /*Expanded(
@@ -749,6 +776,16 @@ class _AddCortesiaActivityState extends State<AddCortesiaActivity> {
                     Center(
                       child: Image.asset("assets/images/foro_ir_white.png",
                         height: 150,
+                      ),
+                    ),
+                    ),
+                    Expanded(flex: 2, child:
+                    Center(
+                      child: GestureDetector(
+                      onTap: (){
+                        removeCortesia();
+                      },
+                      child: Text("Remover \n cortesia"),
                       ),
                     ),
                     ),
@@ -1041,7 +1078,7 @@ class _AddCortesiaActivityState extends State<AddCortesiaActivity> {
                       NfcManager.instance.stopSession();
                       var arrayUser = getString(res);
                       print(arrayUser[0]);
-                      Tools().showMessageBox(context, arrayUser[0]);
+                      //Tools().showMessageBox(context, arrayUser[0]);
                       setState(() {
                         if(arrayUser == null){
                           _codeV = "";
@@ -1096,6 +1133,148 @@ class _AddCortesiaActivityState extends State<AddCortesiaActivity> {
     );
   }
 
+  Future<SimpleDialog> _MenuOptionsPayCortesia() async{
+
+    return await showDialog(
+        context: context,
+        builder: (context){
+          return  SimpleDialog(
+            title: Text("¿Que desea usar?"),
+            children: [
+              SimpleDialogOption(
+                onPressed: () async {
+                  if (Permission.camera.status != PermissionStatus.granted){
+                    if (await Permission.camera.request().isDenied) {
+                      Tools().showMessageBox(context, "Debe conceder permiso de camara, para poder escanear la información de QR");
+                      return;
+                    }
+                  }
+                  String? cameraScanResult = '';
+
+                  // Platform messages may fail, so we use a try/catch PlatformException.
+                  try {
+                    //cameraScanResult = await FlutterBarcodeScanner.scanBarcode(
+                    //'#ff6666', 'Cancel', true, ScanMode.QR);
+                    cameraScanResult = await scanner.scan();
+                    print(cameraScanResult);
+                  } on PlatformException {
+                    cameraScanResult = '';
+                  }
+                  print(cameraScanResult);
+
+                  var arrayUser = getString(cameraScanResult!);
+                  setState(() {
+                    if(arrayUser == null){
+
+                      _codeV = '';
+                      _code ='';
+                      _banco = "0";
+                    }
+                    else{
+                      _banco = "2";
+
+                      _codeV = arrayUser[0];
+                      _code = arrayUser[1];
+
+                      //var jsonEncriptCarrito = Encriptacion().encryptDataE('$jsonCarritoMap', Encriptacion.keyVersion);
+                      //Navigator.of(context).push(MaterialPageRoute(builder: (context) => Payment(codigo: _code, codigoV: _codeV, codigoP: '$jsonCarritoMap', monto: monto+propina, propina: propina, inventario: (!banInventario).toString(), modePayment: 1, banco: 1, referencia: "",),));
+                      fetchRemoveCortesia(_codeV, _code).then((value) {
+                        print('Res Login: $value');
+                        switch(value['rcode']){
+                          case -1:
+                            Tools().showMessageBox(context,value['msg']);
+                            break;
+                          case 0:
+
+
+                            Tools().showMessageBox(context,'Cortesia removida correctamente');
+                            break;
+                          case 1:
+                            setState(() {
+
+                              Tools().showMessageBox(context,'Error al remover la cortesia: ${value['msg']}');
+                            });
+                            break;
+                          default:
+
+                            Tools().showMessageBox(context,'Error al remover la cortesia[1]');
+                            break;
+                        }
+                      });
+                    }
+                  });
+                },
+                child: Text("QR"),
+              ),
+              SimpleDialogOption(
+                onPressed: () async {
+                  if(await NfcManager.instance.isAvailable()){
+
+                    Tools().showMessageBox(context, "Acerque su pulsera al dispositivo para escanear");
+                    NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
+                      print("NFC: ${tag.data}");
+                      Ndef? ndf = Ndef.from(tag);
+                      print("Tag: ${ndf?.cachedMessage!.records[0].payload}");
+                      var res = Utf8Decoder().convert(ndf!.cachedMessage!.records[0].payload);
+                      res = res.substring(3);
+                      print("Content: ${res}");
+                      NfcManager.instance.stopSession();
+                      var arrayUser = getString(res);
+                      print(arrayUser[0]);
+                      //Tools().showMessageBox(context, arrayUser[0]);
+                      setState(() {
+                        if(arrayUser == null){
+                          _codeV = "";
+                          _code = "";
+                          _banco = "0";
+                        }
+                        else{
+                          _banco = "2";
+                          _codeV = arrayUser[0];
+                          _code = arrayUser[1];
+                          //var jsonEncriptCarrito = Encriptacion().encryptDataE('$jsonCarritoMap', Encriptacion.keyVersion);
+
+                          //Navigator.of(context).push(MaterialPageRoute(builder: (context) => Payment(codigo: _code, codigoV: _codeV, codigoP: '$jsonCarritoMap', monto: monto+propina, propina: propina, inventario: (!banInventario).toString(), modePayment: 1,banco: 2, referencia: ""),));
+                          fetchRemoveCortesia(_codeV, _code).then((value) {
+                            print('Res Login: $value');
+                            switch(value['rcode']){
+                              case -1:
+                                Tools().showMessageBox(context,value['msg']);
+                                break;
+                              case 0:
+
+
+                                Tools().showMessageBox(context,'Cortesia removida correctamente');
+                                break;
+                              case 1:
+                                setState(() {
+
+                                  Tools().showMessageBox(context,'Error al remover la cortesia: ${value['msg']}');
+                                });
+                                break;
+                              default:
+
+                                Tools().showMessageBox(context,'Error al remover la cortesia[1]');
+                                break;
+                            }
+                          });
+                        }
+                      });
+                    });
+                    return;
+                  }
+                  else{
+                    Tools().showMessageBox(context, "Dispositivo no cuenta con lector NFC disponible");
+                    return;
+                  }
+                },
+                child: Text("pulsera"),
+              ),
+            ],
+          );
+        }
+    );
+  }
   void eventAddProduct() {
     if(etCantidadControlloler.text.isEmpty || etCantidadControlloler.text == '0'){
       Tools().showMessageBox(context, "Debe ingresar una cantidad valida");
@@ -1165,6 +1344,89 @@ class _AddCortesiaActivityState extends State<AddCortesiaActivity> {
         }
         else{
           String res = document.findAllElements("addCortesiaClientResponse").first.text;
+          print(jsonDecode(res));
+          return jsonDecode(res);
+        }
+
+        print(jsonDecode(res));
+        return jsonDecode(res);
+      } else {
+        // Si esta respuesta no fue OK, lanza un error.
+        //throw Exception('Failed to load post');
+
+        var resError = {
+          'rcode':-1,
+          'msg': 'Error al procesar la solicitud. Intenta de nuevo mas tarde.'
+        };
+
+        return resError;
+      }
+    }, onError:(error) {
+      print('Error: $error');
+      Navigator.pop(context);
+      var resError = {
+        'rcode':-1,
+        'msg': 'Error al procesar la solicitud. Intenta de nuevo mas tarde. [$error]'
+      };
+
+      return resError;
+    });
+    print(response);
+    return response;
+
+
+  }
+  Future<Map<String,dynamic>>  fetchRemoveCortesia(String codigoV, String codigo) async {
+
+
+    print("Init Balance");
+
+    String codigoC = Encriptacion().encryptDataE("${await DataBaseHelper.getValue(DBHelperItem.user.getValue())}|${await DataBaseHelper.getValue(DBHelperItem.pass.getValue())}", Encriptacion.keyVersion);
+
+    String soap = '''<?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+      <soap:Body>
+        <removeSKUCortesia xmlns="http://tempuri.org/">
+          <k>${Tools.keyIndie}</k>
+          <codigoV>$codigoV</codigoV>
+          <codigo>$codigo</codigo>
+          <general_data>true</general_data>
+        </removeSKUCortesia>
+      </soap:Body>
+    </soap:Envelope>''';
+
+    print(soap);
+    showDialog(context: context, builder: (c){
+      return ProgressDialog(message: "Cargando...");
+    });
+
+    print("Init process 2");
+    print('Responde: ${IndieService.removeSKUCortesia.getURL()}');
+    print('Responde: ${IndieService.removeSKUCortesia.getSoapAction()}');
+    final response =
+    await http.post(Uri.parse( IndieService.removeSKUCortesia.getURL()),
+      headers: {
+        'content-type': 'text/xml',
+        'SOAPAction': IndieService.removeSKUCortesia.getSoapAction(),
+      },
+      body: utf8.encode(soap),
+    ).then((response) {
+
+      print("Init process 3");
+      print('Responde: $response');
+      Navigator.pop(context);
+      print("Init process ${response.statusCode}");
+      if (response.statusCode == 200) {
+        // Si la llamada al servidor fue exitosa, analiza el JSON
+        print(response.body);
+        XmlDocument document = XmlDocument.parse(response.body);
+        String element = document.findAllElements("removeSKUCortesiaResponse").first.text;
+        String? res = "0";
+        if (element == ""){
+          res = "0";
+        }
+        else{
+          String res = document.findAllElements("removeSKUCortesiaResponse").first.text;
           print(jsonDecode(res));
           return jsonDecode(res);
         }
@@ -1469,6 +1731,10 @@ class _AddCortesiaActivityState extends State<AddCortesiaActivity> {
             ],
           );
         });
+  }
+
+  void removeCortesia() {
+    _MenuOptionsPayCortesia();
   }
 
 

@@ -7,6 +7,7 @@ import 'package:indierocks_cubetero/Utils/ServiceWS.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:xml/xml.dart';
 
+import 'CortesiaCliente.dart';
 import 'Principal.dart';
 import 'Utils/DataBaseHelper.dart';
 import 'Utils/Encriptacion.dart';
@@ -160,7 +161,7 @@ class _LoginState extends State<Login> {
   getUser() async {
     String data_user = await DataBaseHelper.getValue(DBHelperItem.user.getValue());
     if(!data_user.toString().isEmpty || data_user != ""){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PrincipalActivity()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PrincipalActivity(json_cortesia: [],)));
     }
   }
   eventLogin()  {
@@ -200,7 +201,7 @@ class _LoginState extends State<Login> {
 
           DataBaseHelper.saveLogin(LoginModel( _user, _pass, balance, nameUser)).then((value) {
 
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>PrincipalActivity()));
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>PCortesia()));
           },);
           break;
         case 1:

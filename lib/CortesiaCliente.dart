@@ -55,7 +55,7 @@ class _PCortesiaState extends State<PCortesia> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("CUBETERO"), backgroundColor: ColorsIndie.colorGC1.getColor()),
+        appBar: AppBar(title: Text("CUBETERO", style: TextStyle(color: Colors.white),), backgroundColor: ColorsIndie.colorGC1.getColor()),
         backgroundColor: ColorsIndie.colorGC2.getColor(),
         body: Stack(
           children: [
@@ -117,20 +117,21 @@ class _PCortesiaState extends State<PCortesia> {
                     ),
                   ),
 
-                  SizedBox(height: 40,),
-                  jsoncortesia.isEmpty? Container(
+                  SizedBox(height: 20,),
+                  jsoncortesia.isEmpty || jsoncortesia[0]['ID']==-1 ? Container(
                     alignment: Alignment.center,
                     margin: const EdgeInsets.only(top: 100),
-                    child:  Text('Sin registros por mostrar',
-                      style: TextStyle(fontSize: 20),
+                    child:  Text('No cuentas con cortesias.',
+                      style: TextStyle(fontSize: 30),
                     ),
                   ):
+                  //Center(child: Text(jsoncortesia, style: TextStyle(fontSize: 30),),),
                   ListView.builder(
-                    itemCount: jsoncortesia == null ? 0 : jsoncortesia.length,
+                    itemCount: jsoncortesia.isEmpty ? 0 : jsoncortesia.length,
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
-                      _controllers.add(new TextEditingController( text: '0'));
+                      //_controllers.add(new TextEditingController( text: '0'));
                       return Card(
                         child: Container(
                           width: MediaQuery.of(context).size.width,
@@ -142,7 +143,7 @@ class _PCortesiaState extends State<PCortesia> {
                                   Expanded(child:
                                   Container(
                                     width: MediaQuery.of(context).size.width,
-                                    child: Text( '${jsoncortesia[index]['productName'].toString()}',
+                                    child: Text( '${jsoncortesia[index]['SERVICE']}',
                                       style: const TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold,
@@ -152,21 +153,21 @@ class _PCortesiaState extends State<PCortesia> {
                                   Expanded(child:
                                   Container(
                                     width: MediaQuery.of(context).size.width,
-                                    child: Text( '${jsoncortesia[index]['c'][0]['skS'][0]['i'][0]['cantidad']}',
+                                    child: Text( '${jsoncortesia[index]['Cantidad']}',
                                       style: const TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                   ),),
-                                  Expanded(child:
+                                  /*Expanded(child:
                                   Container(
                                     width: MediaQuery.of(context).size.width,
                                     child: TextField(
                                       textAlign: TextAlign.start,
                                       controller:   _controllers[index],
                                       keyboardType: TextInputType.numberWithOptions(decimal: false),),
-                                  ),),
+                                  ),),*/
 
                                 ],
                               ),
@@ -182,7 +183,7 @@ class _PCortesiaState extends State<PCortesia> {
                   ),
 
                   SizedBox(height: 20,),
-                  Container(
+                  /*Container(
                     width: (MediaQuery
                         .of(context)
                         .size
@@ -199,7 +200,7 @@ class _PCortesiaState extends State<PCortesia> {
                     ),
                     child: ElevatedButton(onPressed: () {
                       //eventPayProduct();
-                      _EnviarCortesia();
+                      //_EnviarCortesia();
                     },
                       style: ElevatedButton.styleFrom(
                           textStyle: TextStyle(
@@ -216,7 +217,7 @@ class _PCortesiaState extends State<PCortesia> {
                           color: ColorsIndie.colorGC1.getColor())),
                     ),
 
-                  ),
+                  ),*/
 
                   SizedBox(height: 20,),
                   Container(
@@ -237,7 +238,11 @@ class _PCortesiaState extends State<PCortesia> {
                     child: ElevatedButton(onPressed: () {
                       //eventPayProduct();
                       //_MenuOptionsPay();
-                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => PrincipalActivity(),), (route) => false);
+                      /*if(jsoncortesia.isEmpty){
+                        Tools().showMessageBox(context, "Debes escanear una pulsera para continuar.");
+                        return;
+                      }*/
+                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => PrincipalActivity(json_cortesia: jsoncortesia,),), (route) => false);
 
                     },
                       style: ElevatedButton.styleFrom(
@@ -265,7 +270,6 @@ class _PCortesiaState extends State<PCortesia> {
         drawer: UITools.getMenulateral(context)
     );
   }
-
 
   Future<SimpleDialog> _MenuOptionsPay() async{
     return await showDialog(
@@ -327,6 +331,7 @@ class _PCortesiaState extends State<PCortesia> {
                               setState(() {
                                 text_title = value['msg'];
                                 _balance = '0';
+                                jsoncortesia = [];
                                 banQR=false;
                               });
                               break;
@@ -340,7 +345,7 @@ class _PCortesiaState extends State<PCortesia> {
                                 banQR=true;
 
                                 jsoncortesia = jsonDecode(value['msg']);
-                                print('json corteria ${jsonDecode(value['msg'])}');
+                                print('json cortesia: ${jsonDecode(value['msg'])}');
                               });
                               /*setState(() {
                 banQR = false;
@@ -351,6 +356,7 @@ class _PCortesiaState extends State<PCortesia> {
 
                               setState(() {
                                 _balance = '0';
+                                jsoncortesia = [];
                                 text_title = 'Error al obtener el balance del cliente';
                                 banQR=false;
                               });
@@ -360,6 +366,7 @@ class _PCortesiaState extends State<PCortesia> {
 
                               setState(() {
                                 _balance = '0';
+                                jsoncortesia = [];
                                 text_title = 'No se pudo obtener información del balance[1]';
                                 banQR=false;
                               });
@@ -383,6 +390,7 @@ class _PCortesiaState extends State<PCortesia> {
 
                   _codeV = '';
                   _code = '';
+                  jsoncortesia = [];
                   Navigator.of(context).pop();
                   if(await NfcManager.instance.isAvailable()){
                     final dialogContextCompleter = Completer<BuildContext>();
@@ -422,6 +430,7 @@ class _PCortesiaState extends State<PCortesia> {
                           _codeV = arrayUser[0];
                           _code = arrayUser[1];
 
+                          jsoncortesia = [];
                           fetchBalance(_codeV, _code).then((value) {
 
                             switch(value['rcode']){
@@ -430,6 +439,7 @@ class _PCortesiaState extends State<PCortesia> {
                                 setState(() {
                                   text_title = value['msg'];
                                   _balance = '0';
+                                  jsoncortesia = [];
                                   banQR=false;
                                 });
                                 break;
@@ -452,6 +462,7 @@ class _PCortesiaState extends State<PCortesia> {
 
                                 setState(() {
                                   _balance = '0';
+                                  jsoncortesia = [];
                                   text_title = 'Error al obtener el balance del cliente';
                                   banQR=false;
                                 });
@@ -461,6 +472,7 @@ class _PCortesiaState extends State<PCortesia> {
 
                                 setState(() {
                                   _balance = '0';
+                                  jsoncortesia = [];
                                   text_title = 'No se pudo obtener información del balance[1]';
                                   banQR=false;
                                 });
@@ -508,28 +520,19 @@ class _PCortesiaState extends State<PCortesia> {
 
   Future<Map<String,dynamic>>  fetchBalance(String codigoV, String codigo) async {
 
+    String codigoC = Encriptacion().encryptDataE("${await DataBaseHelper.getValue(DBHelperItem.user.getValue())}|${await DataBaseHelper.getValue(DBHelperItem.pass.getValue())}", Encriptacion.keyVersion);
+
 
     print("Init Balance");
     String soap = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
-        <getSKUCortesia xmlns="http://tempuri.org/">
+        <getCortesia xmlns="http://tempuri.org/">
           <k>${Tools.keyIndie}</k>
           <codigoV>$codigoV</codigoV>
           <codigo>$codigo</codigo>
-          <general_data>true</general_data>
-        </getSKUCortesia>
-      </soap:Body>
-    </soap:Envelope>''';
-    String soap2 = '''<?xml version="1.0" encoding="utf-8"?>
-    <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-      <soap:Body>
-        <getSKUCortesia xmlns="http://tempuri.org/">
-          <k>${Tools.keyIndie}</k>
-          <codigoV>Z5KLcMwjhGA=</codigoV>
-          <codigo>H8mmQeMywWm3GPiR8kKENw==</codigo>
-          <general_data>true</general_data>
-        </getSKUCortesia>
+          <codigoC>$codigoC</codigoC>
+        </getCortesia>
       </soap:Body>
     </soap:Envelope>''';
     print(soap);
@@ -538,13 +541,13 @@ class _PCortesiaState extends State<PCortesia> {
     });
 
     print("Init process 2");
-    print('Responde: ${IndieService.getSKUCortesia.getURL()}');
-    print('Responde: ${IndieService.getSKUCortesia.getSoapAction()}');
+    print('Responde: ${IndieService.getCortesia.getURL()}');
+    print('Responde: ${IndieService.getCortesia.getSoapAction()}');
     final response =
-    await http.post(Uri.parse( IndieService.getSKUCortesia.getURL()),
+    await http.post(Uri.parse( IndieService.getCortesia.getURL()),
       headers: {
         'content-type': 'text/xml',
-        'SOAPAction': IndieService.getSKUCortesia.getSoapAction(),
+        'SOAPAction': IndieService.getCortesia.getSoapAction(),
       },
       body: utf8.encode(soap),
     ).then((response) {
@@ -557,13 +560,13 @@ class _PCortesiaState extends State<PCortesia> {
         // Si la llamada al servidor fue exitosa, analiza el JSON
         print(response.body);
         XmlDocument document = XmlDocument.parse(response.body);
-        String element = document.findAllElements("getSKUCortesiaResponse").first.text;
+        String element = document.findAllElements("getCortesiaResponse").first.text;
         String? res = "0";
         if (element == ""){
           res = "0";
         }
         else{
-          String res = document.findAllElements("getSKUCortesiaResponse").first.text;
+          String res = document.findAllElements("getCortesiaResponse").first.text;
           print(jsonDecode(res));
           return jsonDecode(res);
         }
@@ -596,7 +599,7 @@ class _PCortesiaState extends State<PCortesia> {
 
 
   }
-
+/*
   void _EnviarCortesia() {
 
     print('codeV $_codeV');
@@ -628,7 +631,7 @@ class _PCortesiaState extends State<PCortesia> {
 
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => PaymentCortesia(codigo: _code, codigoV: _codeV, codigoP: '[]', monto: 0, propina: 0, inventario: (!false).toString(), modePayment: 1, banco: 1, referencia: "", codigoPCosrtesia: '$json_send',),));
 
-  }
+  }*/
 
 
   Future<void> getVersionApp() async{

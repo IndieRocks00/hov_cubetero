@@ -182,7 +182,7 @@ class _PaymentCortesiaState extends State<PaymentCortesia> {
                 banQR? SizedBox(height: 0,):
                 Container(
                   alignment: Alignment.center,
-                  child: QrImage(data: _codigo,
+                  child: QrImageView(data: _codigo,
                     size: MediaQuery.of(context).size.width/2,
                   ),
                 ),

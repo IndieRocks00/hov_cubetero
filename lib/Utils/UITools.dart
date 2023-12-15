@@ -6,9 +6,11 @@ import 'package:indierocks_cubetero/ConsultarBalance.dart';
 import 'package:indierocks_cubetero/CortesiaCliente.dart';
 import 'package:indierocks_cubetero/Orders.dart';
 import 'package:indierocks_cubetero/Transactions.dart';
+import 'package:indierocks_cubetero/AddCortesiaV2.dart';
 
 import '../Principal.dart';
 import '../PuntoVenta.dart';
+import 'DataBaseHelper.dart';
 import 'Tools.dart';
 
 class UITools{
@@ -16,6 +18,7 @@ class UITools{
 
   static Widget getMenulateral(BuildContext context){
     return Drawer(
+
       width: MediaQuery.of(context).size.width/1.8,
       child: ListView(
         padding: EdgeInsets.only(left: 10, top: 40),
@@ -69,8 +72,17 @@ class UITools{
           ListTile(
             title: Text("Cargar Cortesias"),
             leading: Icon(Icons.credit_card),
-            onTap: (){
-              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => AddCortesiaActivity(),), (route) => false);
+            onTap: () async {
+
+              String name =  await DataBaseHelper.getValue(DBHelperItem.user.getValue());
+              name = 'hov_cortesias';
+              if(name == 'hov_cortesias'){
+                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => AddCortesiaV2(),), (route) => false);
+
+              }
+              else{
+                Tools().showMessageBox(context, "No tienes acceso a este modulo");
+              }
             },
           ),
           ListTile(
@@ -87,7 +99,9 @@ class UITools{
 
 
   static AppBar getAppBar(BuildContext context, String _name){
-    return AppBar(title: Text("CUBETERO"), backgroundColor: ColorsIndie.colorGC1.getColor() ,
+    return AppBar(title: Text("CUBETERO",
+      style: TextStyle(color: Colors.white,)),
+      backgroundColor: ColorsIndie.colorGC1.getColor() ,
       bottom: PreferredSize(
         preferredSize: Size.zero,
         child: Container(

@@ -180,7 +180,7 @@ class _PaymentState extends State<Payment> {
                 banQR? SizedBox(height: 0,):
                 Container(
                   alignment: Alignment.center,
-                  child: QrImage(data: _codigo,
+                  child: QrImageView(data: _codigo,
                     size: MediaQuery.of(context).size.width/2,
                   ),
                 ),
@@ -575,7 +575,7 @@ class _PaymentState extends State<Payment> {
     String soap = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
-        <sell xmlns="http://tempuri.org/">
+        <sellV2Cortesia xmlns="http://tempuri.org/">
           <k>${Tools.keyIndie}</k>
           <codigoV>$_codigoV</codigoV>
           <codigo>$_codigo</codigo>
@@ -583,9 +583,9 @@ class _PaymentState extends State<Payment> {
           <codigoP>$jsonEncriptCarrito</codigoP>
           <propina>$_propina</propina>
           <total>$mo</total>
-          <banco>1</banco>
-          <inventario>$_inventario</inventario>
-        </sell>
+          <banco>$_banco</banco>
+          <inventario>true</inventario>
+        </sellV2Cortesia>
       </soap:Body>
     </soap:Envelope>''';
     print(soap);
@@ -594,10 +594,10 @@ class _PaymentState extends State<Payment> {
     });
 
     final response =
-    await http.post(Uri.parse( IndieService.sell.getURL()),
+    await http.post(Uri.parse( IndieService.sellV2Cortesia.getURL()),
       headers: {
         'content-type': 'text/xml',
-        'SOAPAction': IndieService.sell.getSoapAction(),
+        'SOAPAction': IndieService.sellV2Cortesia.getSoapAction(),
       },
       body: utf8.encode(soap),
     ).then((response) {
@@ -609,7 +609,7 @@ class _PaymentState extends State<Payment> {
         XmlDocument document = XmlDocument.parse(response.body);
 
 
-        String res = document.findAllElements("sellResponse").first.text;
+        String res = document.findAllElements("sellV2CortesiaResponse").first.text;
         print(jsonDecode(res));
         return jsonDecode(res);
       } else {

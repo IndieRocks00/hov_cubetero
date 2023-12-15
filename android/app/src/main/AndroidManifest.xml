@@ -2,6 +2,7 @@
     package="com.indierocks.cubetero">
     <uses-permission android:name="android.permission.NFC"/>
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
    <application
         android:label="Cubetero"
         android:name="${applicationName}"

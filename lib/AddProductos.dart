@@ -527,7 +527,8 @@ class _AddProductosState extends State<AddProductos> {
                   nombre: data['productName'],
                   costo: double.parse(data['sku_monto']),
                   categoria: cat,
-                  sku: data['sku']
+                  sku: data['sku'],
+                  service: data['service']
               );
               listProductoAll.add(prodcutoVenta);
             });

@@ -5,12 +5,14 @@ class ProdcutoVenta{
   double costo;
   CategoriaModel categoria;
   String sku;
+  int service;
 
   ProdcutoVenta({
     required this.nombre,
     required this.costo,
     required this.categoria,
     required this.sku,
+    required this.service,
   });
 
 

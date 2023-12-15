@@ -28,17 +28,18 @@ import 'Utils/Encriptacion.dart';
 import 'Utils/ProgressDialog.dart';
 
 class PrincipalActivity extends StatefulWidget {
-  const PrincipalActivity({Key? key}) : super(key: key);
+  final json_cortesia;
+  const PrincipalActivity({Key? key, required this.json_cortesia}) : super(key: key);
 
   @override
-  State<PrincipalActivity> createState() => _PrincipalActivityState();
+  State<PrincipalActivity> createState() => _PrincipalActivityState(json_cortesia);
 }
 
 class _PrincipalActivityState extends State<PrincipalActivity> {
 
 
   var selectedCategoria;
-  var selectedProducto;
+  late ProdcutoVenta selectedProducto = new ProdcutoVenta(nombre: "", costo: 0, categoria: new CategoriaModel(nombre: "", index: 0 ), sku: "", service: 0);
   List<CategoriaModel> listCategoria = [];
   List<ProdcutoVenta> listProducto = [];
   List<ProdcutoVenta> listProductoAll = [];
@@ -66,8 +67,11 @@ class _PrincipalActivityState extends State<PrincipalActivity> {
   var msgGetProducts = "";
 
   String name_user = "";
+  var json_cortesia = [];
 
   var dialogS;
+
+  _PrincipalActivityState( this.json_cortesia);
   @override
   void initState() {
     // TODO: implement initState
@@ -137,11 +141,16 @@ class _PrincipalActivityState extends State<PrincipalActivity> {
 
 
               }
+              double precio = double.parse(data['sku_monto']);
+              /*if(cat.index== 264){
+                precio = 0;
+              }*/
               ProdcutoVenta prodcutoVenta = ProdcutoVenta(
                   nombre: data['productName'],
-                  costo: double.parse(data['sku_monto']),
+                  costo: precio,
                   categoria: cat,
-                  sku: data['sku']
+                  sku: data['sku'],
+                  service: data['service']
               );
               listProductoAll.add(prodcutoVenta);
             });
@@ -192,7 +201,7 @@ class _PrincipalActivityState extends State<PrincipalActivity> {
       //print('ListCategoria: ${listCategoria.toString()}');
       //print('ListProducto: ${listProducto.toString()}');
 
-    },).whenComplete(() => Navigator.pop(dialogS));
+    },);//.whenComplete(() => Navigator.pop(dialogS));
   }
   @override
   void didChangeDependencies() {
@@ -322,8 +331,7 @@ class _PrincipalActivityState extends State<PrincipalActivity> {
                                 child: Padding(
                                   padding: const EdgeInsets.only(left: 20,
                                       right: 20,
-                                      top: 10,
-                                      bottom: 10),
+                                      top: 10,),
                                   child: Column(
                                     children: [
                                       Container(
@@ -373,12 +381,15 @@ class _PrincipalActivityState extends State<PrincipalActivity> {
                             shrinkWrap: true,
                             itemBuilder: (context, position) {
                               return GestureDetector(onTap: (){
-                                print(listProducto.elementAt(position).nombre);
-                                selectedProducto = listProducto.elementAt(position);
-                                etMontoControlloler.text = MoneyFormatter(
-                                    amount: double.parse(
-                                        (selectedProducto as ProdcutoVenta).costo
-                                            .toString())).output.symbolOnLeft;
+                                setState(() {
+
+                                  print(listProducto.elementAt(position).nombre);
+                                  selectedProducto = listProducto.elementAt(position);
+                                  etMontoControlloler.text = MoneyFormatter(
+                                      amount: double.parse(
+                                          (selectedProducto as ProdcutoVenta).costo
+                                              .toString())).output.symbolOnLeft;
+                                });
                               },child: Card(
                                 color: ColorsIndie.colorgris.getColor(),
                                 shape: RoundedRectangleBorder(
@@ -392,8 +403,7 @@ class _PrincipalActivityState extends State<PrincipalActivity> {
 
                                   padding: const EdgeInsets.only(left: 20,
                                       right: 20,
-                                      top: 5,
-                                      bottom: 5),
+                                      top: 5,),
                                   child: Column(
                                     children: [
                                       Container(
@@ -507,6 +517,12 @@ class _PrincipalActivityState extends State<PrincipalActivity> {
                           }).toList(),),*/
                         Row(
                           children: [
+
+                            Expanded(child: Center(child: Text('${selectedProducto.nombre} ', style: TextStyle(fontSize: 20, )))),
+                          ],
+                        ),
+                        Row(
+                          children: [
                             /*Expanded(
                               child: TextField(
                                 controller: etMontoControlloler,
@@ -545,6 +561,16 @@ class _PrincipalActivityState extends State<PrincipalActivity> {
                             Expanded(
                               flex: 3,
                               child: TextField(
+                                onChanged: (value) {
+                                  if (value.isEmpty) {
+                                    etCantidadControlloler.text = '0';
+                                  } else if (value.startsWith('0')) {
+                                    etCantidadControlloler.value = TextEditingValue(
+                                      text: value.substring(1),
+                                      selection: TextSelection.collapsed(offset: 1),
+                                    );
+                                  }
+                                },
                                 controller: etCantidadControlloler,
 
                                 inputFormatters: [
@@ -631,15 +657,27 @@ class _PrincipalActivityState extends State<PrincipalActivity> {
                                 key: UniqueKey(),
                                 onDismissed: (direction) {
                                   setState(() {
-                                    monto = monto - (double.parse(listCarrito
-                                        .elementAt(position)
+                                    ProdcutoVenta pv = listCarrito
+                                        .elementAt(position).prodcutoVenta;
+                                    CarritoModel cm = listCarrito
+                                        .elementAt(position);
+
+                                    monto = monto - (double.parse(cm
                                         .cantidad
-                                        .toString()) * double.parse(listCarrito
-                                        .elementAt(position)
-                                        .prodcutoVenta
+                                        .toString()) * double.parse(pv
                                         .costo
                                         .toString()));
                                     listCarrito.removeAt(position);
+
+                                    for(Map<String,dynamic> data in json_cortesia){
+                                      print('data: $data');
+                                      if(data['SERVICE_ID'] == pv.service){
+
+                                        data['Cantidad'] +=  cm.cantidad;
+                                      }
+                                    }
+
+
                                   });
                                 },
                                 direction: DismissDirection.endToStart,
@@ -755,15 +793,9 @@ class _PrincipalActivityState extends State<PrincipalActivity> {
                     Expanded(flex: 1,
                       child:
                       Center(
-                          child: Switch(
-                            value: banInventario, onChanged: (value) {
-                            banInventario = value;
-
-                            getProductos(banInventario);
-                          },)
-                      ),
+                          child: Text("Cortesias",)
                     ),
-
+                    )
                   ],
                 ),
               ),
@@ -991,12 +1023,12 @@ class _PrincipalActivityState extends State<PrincipalActivity> {
               _banco = "0";
               }
               else{
-              _banco = "2";
+              _banco = "5";
 
               _codeV = arrayUser[0];
               _code = arrayUser[1];
 
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => Payment(codigo: _code, codigoV: _codeV, codigoP: '$jsonCarritoMap', monto: monto+propina, propina: propina, inventario: (!banInventario).toString(), modePayment: 1, banco: 1, referencia: "",),));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => Payment(codigo: _code, codigoV: _codeV, codigoP: '$jsonCarritoMap', monto: monto+propina, propina: propina, inventario: (!banInventario).toString(), modePayment: 1, banco: 5, referencia: "",),));
 
               }
             });
@@ -1018,7 +1050,7 @@ class _PrincipalActivityState extends State<PrincipalActivity> {
                 NfcManager.instance.stopSession();
                 var arrayUser = getString(res);
                 print(arrayUser[0]);
-                Tools().showMessageBox(context, arrayUser[0]);
+                //Tools().showMessageBox(context, arrayUser[0]);
                 setState(() {
                   if(arrayUser == null){
                     _codeV = "";
@@ -1029,7 +1061,7 @@ class _PrincipalActivityState extends State<PrincipalActivity> {
                     _banco = "2";
                     _codeV = arrayUser[0];
                     _code = arrayUser[1];
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => Payment(codigo: _code, codigoV: _codeV, codigoP: '$jsonCarritoMap', monto: monto+propina, propina: propina, inventario: (!banInventario).toString(), modePayment: 1,banco: 2, referencia: ""),));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => Payment(codigo: _code, codigoV: _codeV, codigoP: '$jsonCarritoMap', monto: monto+propina, propina: propina, inventario: (!banInventario).toString(), modePayment: 1,banco: 3, referencia: ""),));
                   }
                 });
               });
@@ -1053,14 +1085,69 @@ class _PrincipalActivityState extends State<PrincipalActivity> {
       Tools().showMessageBox(context, "Debe ingresar una cantidad valida");
       return;
     }
+
+    int cant_text = int.parse(etCantidadControlloler.text);
+    if(cant_text<= 0){
+      Tools().showMessageBox(context, "Debe ingresar una cantidad mayor a 0");
+      return;
+    }
+    print('Cortesias disponibles: $json_cortesia');
     setState(() {
-      CarritoModel car = CarritoModel(cantidad: int.parse(etCantidadControlloler.text), prodcutoVenta: selectedProducto);
+      CarritoModel car = CarritoModel(cantidad: cant_text, prodcutoVenta: selectedProducto);
       print("Cantidad carrito = ${car.cantidad}");
       print("Costo Producto = ${car.prodcutoVenta.costo}");
-      listCarrito.add(car);
-      print("Producto agregado : Monto actual = $monto");
-      monto = monto + ( double.parse( car.cantidad.toString()) * double.parse( car.prodcutoVenta.costo.toString()));
-      print("Producto agregado : Monto actual = $monto");
+      if(selectedProducto.categoria.index == 367){
+        if(json_cortesia.isEmpty){
+
+          Tools().showMessageBox(context, "No cuenta con cortesias disponibles");
+          return;
+        }
+        if(json_cortesia[0]['ID'] == -1){
+
+          Tools().showMessageBox(context, "No cuenta con cortesias disponibles");
+          return;
+        }
+
+        for(Map<String,dynamic> data in json_cortesia){
+          print('data: $data');
+          if(data['SERVICE_ID'] == selectedProducto.service){
+            if  (data['Cantidad'] < cant_text){
+
+              Tools().showMessageBox(context, "No cuentas con costesias suficientes para el seleccionado. Disponibles: ${data['Cantidad']}");
+              return;
+            }
+            else{
+              data['Cantidad'] -=  cant_text;
+              listCarrito.add(car);
+
+              print('Cortesias despues de aregar: $json_cortesia');
+            }
+
+          }
+        }
+        //print("Continuo la ejecución");
+        /*if (cant_cortesia>0){
+          if(cant_cortesia < cant_text){
+
+            Tools().showMessageBox(context, "No cuenta con suficientes cortesias. Cortesias disponibles: $cant_cortesia");
+            return;
+          }
+          cant_cortesia = cant_cortesia-cant_text;
+          listCarrito.add(car);
+        }
+        else{
+
+          Tools().showMessageBox(context, "Ya no cuenta con mas cortesias disponibles");
+          return;
+        }*/
+      }
+      else{
+
+        print("Producto agregado : Monto actual = $monto");
+        monto = monto + ( double.parse( car.cantidad.toString()) * double.parse( car.prodcutoVenta.costo.toString()));
+        print("Producto agregado : Monto actual = $monto");
+        listCarrito.add(car);
+      }
       etCantidadControlloler.text = "0";
     });
   }
@@ -1086,12 +1173,12 @@ class _PrincipalActivityState extends State<PrincipalActivity> {
     return array;
   }
   void eventPayProduct() {
-    if(monto == 0){
+    if(listCarrito.isEmpty){
       Tools().showMessageBox(context, "Carrito vacio. Debe seleccionar productos");
       return;
     }
-    _displayTextInputDialog(context);
-    //_MenuOptionsPay();
+    //_displayTextInputDialog(context);
+    _MenuOptionsPay();
     //Navigator.of(context).push(MaterialPageRoute(builder: (context) => Payment(name: _name_code, user: _user_code, pass: _pass_code, banco: _banco, monto: monto),));
   }
 

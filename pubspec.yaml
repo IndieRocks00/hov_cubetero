@@ -46,12 +46,19 @@ dependencies:
   nfc_manager: ^3.2.0
   dart_des: ^1.0.2
   package_info_plus: ^3.0.1
-  qr_flutter: ^4.0.0
+  qr_flutter: ^4.1.0
   sqflite: ^2.2.0+2
   path: ^1.8.2
   currency_text_input_formatter: ^2.1.8
   flutter_barcode_scanner: ^2.0.0
   qrscan: ^0.3.3
+  flutter_dotenv: ^5.1.0
+  dartz: ^0.10.1
+  equatable: ^2.0.5
+  connectivity_plus: ^5.0.2
+  freezed_annotation: ^2.4.1
+  json_annotation: ^4.8.1
+  flutter_riverpod: ^2.4.8
 
 dev_dependencies:
   flutter_test:
@@ -63,6 +70,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  freezed: ^2.4.5
+  json_serializable: ^6.7.1
+  build_runner: ^2.4.6
 flutter_icons:
   android: "launcher_icon"
   ios: true
@@ -79,6 +89,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - lib/core/env/.env
 
   # To add assets to your application, add an assets section, like this:
   # assets:

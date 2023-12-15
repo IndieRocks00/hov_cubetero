@@ -159,6 +159,13 @@ enum IndieService{
   addCortesiaClient,
   getSKUCortesia,
   sellCortesia,
+  removeSKUCortesia,
+
+  getCortesia,
+  addCortesia,
+  removeCortesia,
+  sellV2Cortesia,
+  getOptionsCortesia,
 
   getSKU,
   getTXN,
@@ -167,8 +174,9 @@ enum IndieService{
 
 extension IndieServiceExtension on IndieService{
   //static const URL_SERVER = "http://indierocks.ddns.net/indierocks";
-  static const URL_SERVER = "http://turbocarga.ddns.net/indierocks";
-  //static const URL_SERVER = "http://192.168.1.74/indierocks";
+  //static const URL_SERVER = "http://turbocarga.ddns.net/indierocks";
+  static const URL_SERVER = "http://172.20.10.6/indierocks";
+  //static const URL_SERVER = "http://192.168.1.38/indierocks";
   //static const URL_SERVER = "http://indierockss.ddns.net:9090/";
   static const ComplementSoapAction = "http://tempuri.org";
   String getURL(){
@@ -216,6 +224,18 @@ extension IndieServiceExtension on IndieService{
       case IndieService.getSKUCortesia:
         return "$URL_SERVER/wsIRC/wsCL.asmx";
       case IndieService.sellCortesia:
+        return "$URL_SERVER/wsIRC/wsCL.asmx";
+      case IndieService.removeSKUCortesia:
+        return "$URL_SERVER/wsIRC/wsCL.asmx";
+      case IndieService.getCortesia:
+        return "$URL_SERVER/wsIRC/wsCL.asmx";
+      case IndieService.addCortesia:
+        return "$URL_SERVER/wsIRC/wsCL.asmx";
+      case IndieService.removeCortesia:
+        return "$URL_SERVER/wsIRC/wsCL.asmx";
+      case IndieService.sellV2Cortesia:
+        return "$URL_SERVER/wsIRC/wsCL.asmx";
+      case IndieService.getOptionsCortesia:
         return "$URL_SERVER/wsIRC/wsCL.asmx";
 
 
@@ -266,6 +286,18 @@ extension IndieServiceExtension on IndieService{
         return "$ComplementSoapAction/getSKUCortesia";
       case IndieService.sellCortesia:
         return "$ComplementSoapAction/sellCortesia";
+      case IndieService.removeSKUCortesia:
+        return "$ComplementSoapAction/removeSKUCortesia";
+      case IndieService.getCortesia:
+        return "$ComplementSoapAction/getCortesia";
+      case IndieService.addCortesia:
+        return "$ComplementSoapAction/addCortesia";
+      case IndieService.removeCortesia:
+        return "$ComplementSoapAction/removeCortesia";
+      case IndieService.sellV2Cortesia:
+        return "$ComplementSoapAction/sellV2Cortesia";
+      case IndieService.getOptionsCortesia:
+        return "$ComplementSoapAction/getOptionsCortesia";
 
       default:
         return URL_SERVER;

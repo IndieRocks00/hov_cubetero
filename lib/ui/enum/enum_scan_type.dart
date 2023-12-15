@@ -1,0 +1,7 @@
+
+
+enum ScanType {
+  QR,
+  NFC,
+}
+

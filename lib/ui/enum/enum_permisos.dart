@@ -1,0 +1,6 @@
+
+
+enum PermisosType {
+  CAMERA,
+  NFC,
+}
