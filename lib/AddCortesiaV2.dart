@@ -250,7 +250,7 @@ class _AddCortesiaV2State extends State<AddCortesiaV2> {
                           fontWeight: FontWeight.bold,
                           fontSize: 18
                       ),
-                      primary: ColorsIndie.colorGC2.getColor(),
+                      backgroundColor: ColorsIndie.colorGC2.getColor(),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       )
@@ -285,7 +285,7 @@ class _AddCortesiaV2State extends State<AddCortesiaV2> {
                           fontWeight: FontWeight.bold,
                           fontSize: 18
                       ),
-                      primary: ColorsIndie.colorGC2.getColor(),
+                      backgroundColor: ColorsIndie.colorGC2.getColor(),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       )

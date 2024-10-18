@@ -10,7 +10,9 @@ class ApiStateNotifier extends StateNotifier<ApiState>{
       required DetailBalance detailBalance,
       required Venta venta,
       required AddCortesia addCortesia,
-      required RemoveCortesia removeCortesia,
+    required RemoveCortesia removeCortesia,
+    required GetTokenPulsera getTokenPulsera,
+    required ValidarBoleto validarBoleto,
   }) : assert(payment != null),
         assert(payment_return != null),
         assert(payment_terminal != null),
@@ -18,6 +20,8 @@ class ApiStateNotifier extends StateNotifier<ApiState>{
         assert(venta != null),
         assert(addCortesia != null),
         assert(removeCortesia != null),
+        assert(getTokenPulsera != null),
+        assert(validarBoleto != null),
         _payment = payment,
         _paymentReturn = payment_return,
         _paymentTerminal = payment_terminal,
@@ -25,6 +29,8 @@ class ApiStateNotifier extends StateNotifier<ApiState>{
         _venta = venta,
         _addCortesia = addCortesia,
         _removeCortesia = removeCortesia,
+        _getTokenPulsera = getTokenPulsera,
+        _validarBoleto = validarBoleto,
         super(ApiState.initial());
 
   final Payment _payment;
@@ -34,6 +40,8 @@ class ApiStateNotifier extends StateNotifier<ApiState>{
   final Venta _venta;
   final AddCortesia _addCortesia;
   final RemoveCortesia _removeCortesia;
+  final GetTokenPulsera _getTokenPulsera;
+  final ValidarBoleto _validarBoleto;
 
   void reset() => state = Initial();
 
@@ -82,7 +90,7 @@ class ApiStateNotifier extends StateNotifier<ApiState>{
   }
 
 
-  Future<void> addCortesia(String code_client_encripted,String code_user_encripted,String cortesias) async{
+  Future<void> addCortesia(String code_client_encripted,String code_user_encripted,String cortesias, String eventID) async{
     state = Loading();
     print('Entro a add cortesia notifier ${code_client_encripted},${code_user_encripted},${cortesias}');
     if(_addCortesia == null){
@@ -93,7 +101,7 @@ class ApiStateNotifier extends StateNotifier<ApiState>{
 
       print('add cortesia NO es nulo');
     }
-    final result = await _addCortesia(code_client_encripted,code_user_encripted,cortesias);
+    final result = await _addCortesia(code_client_encripted,code_user_encripted,cortesias, eventID);
     print('Entro a add cortesia notifier result : ${result.toString()}');
     result.fold(
             (error) => state = Error(statuscode: error.statusCode,message: error.message),
@@ -105,6 +113,23 @@ class ApiStateNotifier extends StateNotifier<ApiState>{
   Future<void> removeCortesias(String code_client_encripted,String code_user_encripted,) async{
     state = Loading();
     final result = await _removeCortesia(code_client_encripted,code_user_encripted);
+    result.fold(
+            (error) => state = Error(statuscode: error.statusCode,message: error.message),
+            (resApiModel) => state = ApiAvailable(apiState: resApiModel)
+    );
+  }
+  Future<void> getTokenPulsera(String code_user_encripted,) async{
+    state = Loading();
+    final result = await _getTokenPulsera(code_user_encripted);
+    result.fold(
+            (error) => state = Error(statuscode: error.statusCode,message: error.message),
+            (resApiModel) => state = ApiAvailable(apiState: resApiModel)
+    );
+  }
+
+  Future<void> validarBoleto(String code_client_encripted,String code_user_encripted,) async{
+    state = Loading();
+    final result = await _validarBoleto(code_client_encripted,code_user_encripted);
     result.fold(
             (error) => state = Error(statuscode: error.statusCode,message: error.message),
             (resApiModel) => state = ApiAvailable(apiState: resApiModel)

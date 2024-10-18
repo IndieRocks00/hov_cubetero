@@ -11,6 +11,7 @@ import 'package:indierocks_cubetero/core/providers/api/api_state.dart';
 import 'package:indierocks_cubetero/core/providers/providers.dart';
 import 'package:indierocks_cubetero/data/models/user_model.dart';
 import 'package:indierocks_cubetero/ui/enum/enum_process.dart';
+import 'package:indierocks_cubetero/ui/widgets/loading_widget.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 
 class NFCController extends ConsumerStatefulWidget {
@@ -18,11 +19,13 @@ class NFCController extends ConsumerStatefulWidget {
   final List<dynamic> json_cortesia;
   final Function(String data)? onDataChange;
   final Function()? onCancel;
+  final String eventId;
   NFCController( {Key? key,
     required this.process,
     this.json_cortesia = const [],
     this.onDataChange,
-    this.onCancel
+    this.onCancel,
+    this.eventId = '0'
   }) : super(key: key);
 
   @override
@@ -39,6 +42,7 @@ class _NFCControllerState extends ConsumerState<NFCController> {
   String text_title = '';
 
   var apiRes;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -51,6 +55,8 @@ class _NFCControllerState extends ConsumerState<NFCController> {
       text_title = 'ESPERANDO';
       cant_pulsera = 0;
       userOperativo = ref.read(userLogued.notifier).state;
+
+      print('json_cortesias nfcController: ${widget.json_cortesia}');
 
     });
 
@@ -95,7 +101,7 @@ class _NFCControllerState extends ConsumerState<NFCController> {
                 else if(widget.process == ProcessType.ADD_CORTESIA){
 
                   ref.read(apiNotiier.notifier).reset();
-                  ref.read(apiNotiier.notifier).addCortesia(decodedPayload, userOperativo!.data_encripted, widget.json_cortesia.toString());
+                  ref.read(apiNotiier.notifier).addCortesia(decodedPayload, userOperativo!.data_encripted, widget.json_cortesia.toString(), widget.eventId);
                 }
                 else if(widget.process == ProcessType.REMOVE_CORTESIA){
 
@@ -133,7 +139,7 @@ class _NFCControllerState extends ConsumerState<NFCController> {
       shape: RoundedRectangleBorder(
           borderRadius:BorderRadius.circular(20.0)),
       child: Container(
-        color: AppColors.backgroundColor,
+        color: AppColors.background_general_second,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -141,7 +147,7 @@ class _NFCControllerState extends ConsumerState<NFCController> {
             Text(widget.process.getName(),style:TextStyle(fontSize: 20, ), textAlign: TextAlign.center),
             const SizedBox(height: 50),
             widget.process == ProcessType.READ_PULSERA ?
-              const CircularProgressIndicator(color: AppColors.primaryColor,):
+              LoadingWidget():
               pulsera_lectura ?
               apiRes.when(
                   available: (apiState) {
@@ -233,7 +239,7 @@ class _NFCControllerState extends ConsumerState<NFCController> {
                     setState(() {
                       text_title = 'Procesando...';
                     });
-                    return const CircularProgressIndicator(color: AppColors.primaryColor,);
+                    return const LoadingWidget();
                   },
                   error: (statuscode, message) {
                     setState(() {
@@ -292,6 +298,11 @@ class _NFCControllerState extends ConsumerState<NFCController> {
             GestureDetector(
               child: const Text('Cancelar', style: TextStyle(color: AppColors.primaryColor,fontSize: 15),),
               onTap: () {
+
+                setState(() {
+
+                  cant_pulsera = 0;
+                });
                 NfcManager.instance.stopSession();
                 Navigator.of(context).pop();
               },

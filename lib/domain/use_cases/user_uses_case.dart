@@ -106,9 +106,9 @@ class AddCortesia{
   }) : assert(repository != null), _repository = repository;
 
   final IUserRepository _repository;
-  Future<Either<Failure,ResApiModel>> call(String code_client_encripted,String code_user_encripted,String cortesias) async{
+  Future<Either<Failure,ResApiModel>> call(String code_client_encripted,String code_user_encripted,String cortesias, String eventId) async{
     print('Entro al caso de uso');
-    return await _repository.addCortesia(code_client_encripted,code_user_encripted,cortesias);
+    return await _repository.addCortesia(code_client_encripted,code_user_encripted,cortesias,eventId);
   }
 }
 
@@ -120,4 +120,34 @@ class RemoveCortesia{
   final IUserRepository _repository;
   Future<Either<Failure,ResApiModel>> call(String code_client_encripted,String code_user_encripted) async =>
       await _repository.removeCortesia(code_client_encripted,code_user_encripted);
+}
+
+class GetTokenPulsera{
+  GetTokenPulsera({
+    required IUserRepository  repository
+  }) : assert(repository != null), _repository = repository;
+
+  final IUserRepository _repository;
+  Future<Either<Failure,ResApiModel>> call(String code_user_encripted) async =>
+      await _repository.getTokenPulsera(code_user_encripted);
+}
+
+class ValidarBoleto{
+  ValidarBoleto({
+    required IUserRepository  repository
+  }) : assert(repository != null), _repository = repository;
+
+  final IUserRepository _repository;
+  Future<Either<Failure,ResApiModel>> call(String code_client_encripted,String code_user_encripted) async =>
+      await _repository.validarBoleto(code_client_encripted,code_user_encripted);
+}
+
+class AccesToEvent{
+  AccesToEvent({
+    required IUserRepository  repository
+  }) : assert(repository != null), _repository = repository;
+
+  final IUserRepository _repository;
+  Future<Either<Failure,ResApiModel>> call(String code_user_encripted, int userId, int codeVans) async =>
+      await _repository.accesToEvent(code_user_encripted, userId, codeVans);
 }

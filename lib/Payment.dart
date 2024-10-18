@@ -216,7 +216,7 @@ class _PaymentState extends State<Payment> {
                             fontWeight: FontWeight.bold,
                             fontSize: 18
                         ),
-                        primary: ColorsIndie.colorGC1.getColor(),
+                        backgroundColor: ColorsIndie.colorGC1.getColor(),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         )

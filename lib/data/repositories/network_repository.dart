@@ -20,9 +20,11 @@ class NetworkRepository extends INetworkManagerRepository{
       result = await connectivity.checkConnectivity();
       print('Wifi RESULT ${result}');
       if (result == ConnectivityResult.none){
+        print('Wifi RESULT false');
         return false;
       }
       else{
+        print('Wifi RESULT true');
         return true;
       }
     } on PlatformException catch (e) {

@@ -40,10 +40,11 @@ class _ButtomLoadingState extends State<ButtomLoading> {
         child: ElevatedButton(onPressed: widget.onPressed,
           style: ElevatedButton.styleFrom(
               textStyle: const TextStyle(color: AppColors.backgroundColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+                fontFamily: 'Helvetica',
               ),
-              primary: AppColors.primaryColor,
+              backgroundColor: AppColors.primaryColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               )
@@ -56,7 +57,7 @@ class _ButtomLoadingState extends State<ButtomLoading> {
               valueColor: AlwaysStoppedAnimation<Color>(AppColors.backgroundColor),
             ),
           )
-              : Text(widget.text),
+              : Text(widget.text, style: TextStyle(color: AppColors.backgroundColor),),
         )
     );
   }

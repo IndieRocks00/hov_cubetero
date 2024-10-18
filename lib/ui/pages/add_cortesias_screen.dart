@@ -6,13 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:indierocks_cubetero/core/colors/AppColors.dart';
+import 'package:indierocks_cubetero/core/images/AppImages.dart';
 import 'package:indierocks_cubetero/core/providers/api/api_provider.dart';
 import 'package:indierocks_cubetero/core/providers/providers.dart';
 import 'package:indierocks_cubetero/data/models/user_model.dart';
+import 'package:indierocks_cubetero/ui/components/dialog_scan_handler.dart';
 import 'package:indierocks_cubetero/ui/components/nfc_controller.dart';
 import 'package:indierocks_cubetero/ui/enum/enum_process.dart';
 import 'package:indierocks_cubetero/ui/widgets/app_bar_custom.dart';
 import 'package:indierocks_cubetero/ui/widgets/butom_custom.dart';
+import 'package:indierocks_cubetero/ui/widgets/loading_widget.dart';
 import 'package:indierocks_cubetero/ui/widgets/menu_drawer_app.dart';
 import 'package:indierocks_cubetero/ui/widgets/snackbar_custom.dart';
 
@@ -29,6 +32,7 @@ class _AddCortesiasScreenState extends ConsumerState<AddCortesiasScreen> {
   var isLoading = false;
   var etCantidadControlloler = TextEditingController();
   List<TextEditingController> _controllers = [];
+  TextEditingController _controllerEventId = TextEditingController(text: '0');
 
   @override
   void initState()  {
@@ -110,14 +114,58 @@ class _AddCortesiasScreenState extends ConsumerState<AddCortesiasScreen> {
                         children: [
                           Expanded(flex: 1, child:
                           Center(
-                            child: Image.asset("assets/images/foro_ir_white.png",
-                              height: 150,
-                            ),
+                            child: AppImages.getLogoBlack(MediaQuery.of(context).size.width - 100, 150),
                           ),
                           ),
                         ],
                       ),
                     ),
+                    SizedBox(height: 24,),
+                    const Text('Ingresa el Id del evento al que se le asignara la cortesia',
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    Card(
+                      child: Container(
+                        padding: const EdgeInsets.only(left: 10),
+                        margin: const EdgeInsets.all(10),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(child: Text('ID del evento'),),
+                                Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.only(left: 10,right: 10),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.backgroundTextField,
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    child: TextFormField(
+                                      onChanged: (value) {
+                                        if (value.isEmpty) {
+                                          _controllerEventId.text = '0';
+                                        } else if (value.startsWith('0')) {
+                                          _controllerEventId.value = TextEditingValue(
+                                            text: value.substring(1),
+                                            selection: const TextSelection.collapsed(offset: 1),
+                                          );
+                                        }
+                                      },
+                                      textAlign: TextAlign.start,
+                                      controller:   _controllerEventId,
+                                      inputFormatters: [FilteringTextInputFormatter.digitsOnly,],
+                                      keyboardType: const TextInputType.numberWithOptions(decimal: false),
+                                      cursorColor: AppColors.primaryColor,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 24,),
                     const Text('Ingresa la cantidad de cortesias para el cliente',
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
@@ -200,8 +248,35 @@ class _AddCortesiasScreenState extends ConsumerState<AddCortesiasScreen> {
                           );
                           return;
                         }
-                        showDialog(context: context,
+                        if(_controllerEventId.text.isEmpty){
+
+                          ScaffoldMessenger.maybeOf(context)?.removeCurrentSnackBar();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackbarCustom(
+                                message: 'Debes ingresar el Id de un evento para continuar con el proceso',
+                                backgroundColor: AppColors.alert_information,
+                                textColor: AppColors.textColorInformation,
+                                icon: Icons.warning,
+                                context: context,
+                              )
+                          );
+                          return;
+                        }
+                        print('json_cortesias add cortesias : $json_cortesias');
+                        DialogScanHandler(
+                          parentContext: context,
+                          process: ProcessType.ADD_CORTESIA ,
+                          json_cortesia: json_cortesias,
+                          eventId: _controllerEventId.text,
+                          dataCallback: (data, banco) {
+
+                            //ref.read(apiNotiier.notifier).addCortesia(data, userOperativo!.data_encripted, json_cortesias.toString());
+
+                          },
+                        ).showDialogOption();
+                        /*showDialog(context: context,
                             barrierDismissible: false, builder: (context){
+
                           return NFCController(process: ProcessType.ADD_CORTESIA,
                             json_cortesia: json_cortesias,
                             onDataChange: (data) {
@@ -215,16 +290,26 @@ class _AddCortesiasScreenState extends ConsumerState<AddCortesiasScreen> {
                           if(Navigator.of(context).canPop()){
                             Navigator.of(context).pop();
                           }
-                        },);
+                        },);*/
                     },),
                     ButtomCustom(text: 'Remover',
                       margin: EdgeInsets.only(left: 0,right: 0, top: 10),
                       onPressed: () async{
-                        showDialog(context: context,
+                        DialogScanHandler(
+                          parentContext: context,
+                          process: ProcessType.REMOVE_CORTESIA ,
+                          eventId: _controllerEventId.text,
+                          dataCallback: (data, banco) {
+
+                            //ref.read(apiNotiier.notifier).addCortesia(data, userOperativo!.data_encripted, json_cortesias.toString());
+
+                          },
+                        ).showDialogOption();
+                        /*showDialog(context: context,
                           barrierDismissible: false, builder: (context){
                             return NFCController(process: ProcessType.REMOVE_CORTESIA,
                             );
-                          });
+                          });*/
                     },),
                     const SizedBox(height: 10,),
                   ],
@@ -242,7 +327,7 @@ class _AddCortesiasScreenState extends ConsumerState<AddCortesiasScreen> {
               child: const Column(
                 children: [
                   Spacer(),
-                  CircularProgressIndicator(color: AppColors.primaryColor,),
+                  LoadingWidget(),
                   Spacer(),
                 ],
               ),

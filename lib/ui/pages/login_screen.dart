@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:indierocks_cubetero/Utils/Tools.dart';
 import 'package:indierocks_cubetero/Utils/UITools.dart';
 import 'package:indierocks_cubetero/core/colors/AppColors.dart';
+import 'package:indierocks_cubetero/core/images/AppImages.dart';
 import 'package:indierocks_cubetero/core/providers/login/login_provider.dart';
 import 'package:indierocks_cubetero/core/providers/login/login_state.dart';
 import 'package:indierocks_cubetero/core/providers/providers.dart';
@@ -24,8 +25,8 @@ class LoginScreen extends ConsumerStatefulWidget {
 
 class LoginScreenState extends ConsumerState<LoginScreen> {
 
-  final etUserController = TextEditingController();
-  final etPassController = TextEditingController();
+  final etUserController = TextEditingController(text: 'hov_cortesias');
+  final etPassController = TextEditingController(text: '1234');
 
 
   @override
@@ -78,10 +79,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Center(
-                  child: Image.asset("assets/images/foro_ir_white.png",
-                    width: MediaQuery.of(context).size.width-100,
-                    height: 200,
-                  ),
+                  child: AppImages.getLogoBlack(MediaQuery.of(context).size.width - 100, 200)
                 ),
 
                 Column(
@@ -105,7 +103,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                         await ref.read(loginNotifier.notifier).doLogin(etUserController.text.toString(),etPassController.text.toString());
 
                       },
-                      text: "Inicias Sesión",
+                      text: "Iniciar Sesión",
                     )
                   ],
                 ),

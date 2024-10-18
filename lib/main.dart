@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'HOV Cubetero',
       theme: ThemeData(
+        fontFamily: 'Helvetica',
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         appBarTheme: AppBarTheme(color: Colors.white),
         // This is the theme of your application.

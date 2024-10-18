@@ -11,6 +11,7 @@ import 'package:indierocks_cubetero/core/providers/providers.dart';
 import 'package:indierocks_cubetero/data/models/user_model.dart';
 import 'package:indierocks_cubetero/ui/enum/enum_process.dart';
 import 'package:indierocks_cubetero/ui/widgets/butom_custom.dart';
+import 'package:indierocks_cubetero/ui/widgets/loading_widget.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
 
 class ScanController extends ConsumerStatefulWidget {
@@ -18,11 +19,13 @@ class ScanController extends ConsumerStatefulWidget {
   final List<dynamic> json_cortesia;
   final Function(String data)? onDataChange;
   final Function()? onCancel;
+  final String eventId;
   const ScanController({Key? key,
     required this.process,
     this.json_cortesia = const [],
     this.onDataChange,
-    this.onCancel
+    this.onCancel,
+    required this.eventId
   }) : super(key: key);
 
   @override
@@ -101,7 +104,7 @@ class _ScanControllerState extends ConsumerState<ScanController> {
         else if(widget.process == ProcessType.ADD_CORTESIA){
 
           ref.read(apiNotiier.notifier).reset();
-          ref.read(apiNotiier.notifier).addCortesia(text_scan!, userOperativo!.data_encripted, widget.json_cortesia.toString());
+          ref.read(apiNotiier.notifier).addCortesia(text_scan!, userOperativo!.data_encripted, widget.json_cortesia.toString(), widget.eventId);
         }
         else if(widget.process == ProcessType.REMOVE_CORTESIA){
 
@@ -142,14 +145,14 @@ class _ScanControllerState extends ConsumerState<ScanController> {
       shape: RoundedRectangleBorder(
           borderRadius:BorderRadius.circular(20.0)),
       child: Container(
-        color: AppColors.backgroundColor,
+        color: AppColors.background_general_second,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(height: 30),
             Text(widget.process.getName(),style:TextStyle(fontSize: 20, ), textAlign: TextAlign.center),
             const SizedBox(height: 50),
-            widget.process == ProcessType.READ_PULSERA ? const CircularProgressIndicator(color: AppColors.primaryColor,)
+            widget.process == ProcessType.READ_PULSERA ? const LoadingWidget()
             :
             pulsera_lectura ?
             apiRes.when(
@@ -224,23 +227,30 @@ class _ScanControllerState extends ConsumerState<ScanController> {
               },
               initial: () {
                 print('Inicial');
-                return Container(
-                  padding: EdgeInsets.all(15),
-                  decoration: const BoxDecoration(
-                    color: AppColors.alert_information,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
+                return Column(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(15),
+                      decoration: const BoxDecoration(
                         color: AppColors.alert_information,
-                        blurRadius: 10,
-                        offset: Offset(4, 8), // Shadow position
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.alert_information,
+                            blurRadius: 10,
+                            offset: Offset(4, 8), // Shadow position
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  child: const Icon(Icons.circle_outlined,
-                      color: AppColors.backgroundColor,
-                      size: 40
-                  ),
+                      child: const Icon(Icons.circle_outlined,
+                          color: AppColors.backgroundColor,
+                          size: 40
+                      ),
+                    ),
+                    ButtomCustom(text: 'Escanear', onPressed: () async{
+                      getcode();
+                    },)
+                  ],
                 );
               },
               loading: () {
@@ -248,7 +258,7 @@ class _ScanControllerState extends ConsumerState<ScanController> {
                 setState(() {
                   text_title = 'Procesando...';
                 });
-                return const CircularProgressIndicator(color: AppColors.primaryColor,);
+                return LoadingWidget();
               },
               error: (statuscode, message) {
                 setState(() {

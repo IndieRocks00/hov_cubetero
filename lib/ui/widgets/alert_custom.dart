@@ -37,7 +37,7 @@ class AlertCustomDialog {
         return Dialog(
           shape: RoundedRectangleBorder(borderRadius:  BorderRadius.circular(20)),
           elevation: 10,
-          backgroundColor: AppColors.backgroundColor,
+          backgroundColor: AppColors.background_general_second,
           child: ConstrainedBox(
             constraints: BoxConstraints(
               maxHeight: MediaQuery.of(context).size.width * 0.6,

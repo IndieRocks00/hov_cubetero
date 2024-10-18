@@ -27,6 +27,7 @@ import 'package:indierocks_cubetero/ui/widgets/alert_custom.dart';
 import 'package:indierocks_cubetero/ui/widgets/app_bar_custom.dart';
 import 'package:indierocks_cubetero/ui/widgets/butom_custom.dart';
 import 'package:indierocks_cubetero/ui/widgets/loading_screen.dart';
+import 'package:indierocks_cubetero/ui/widgets/loading_widget.dart';
 import 'package:indierocks_cubetero/ui/widgets/menu_drawer_app.dart';
 import 'package:indierocks_cubetero/ui/widgets/snackbar_custom.dart';
 
@@ -277,6 +278,7 @@ class _ProductosScreenState extends ConsumerState<ProductosScreen> {
                               DialogScanHandler(
                                 process: ProcessType.READ_PULSERA,
                                 parentContext: context,
+
                                 dataCallback: (data, banco) {
                                   print('Data_leido Escaner Cliente: $data');
 
@@ -327,7 +329,7 @@ class _ProductosScreenState extends ConsumerState<ProductosScreen> {
                     child: const Column(
                       children: [
                         Spacer(),
-                        CircularProgressIndicator(color: AppColors.primaryColor,),
+                        LoadingWidget(),
                         Spacer(),
                       ],
                     ),

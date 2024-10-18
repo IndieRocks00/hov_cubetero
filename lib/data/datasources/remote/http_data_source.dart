@@ -70,11 +70,11 @@ class HttpDataSource implements IRemoteDataSource{
             'SOAPAction': IndieService.ilg.getSoapAction(),
           },
           body: utf8.encode(soap),
-        ).timeout(
+        )/*.timeout(
             const Duration(
                 seconds: 30
             )
-        );
+        )*/;
 
         print(response.body) ;
         print(url_base) ;
@@ -578,7 +578,7 @@ class HttpDataSource implements IRemoteDataSource{
   }
 
   @override
-  Future<ResApiModel> addCortesia(String code_version_encripted, String code_client_encripted, String code_user_encripted, String code_cortesia_encripted) async{
+  Future<ResApiModel> addCortesia(String code_version_encripted, String code_client_encripted, String code_user_encripted, String code_cortesia_encripted, int eventId) async{
     String url_base = '$_url/wsIRC/wsCL.asmx';
     try{
       //Future.delayed(Duration(seconds: 5));
@@ -592,6 +592,7 @@ class HttpDataSource implements IRemoteDataSource{
           <codigo>$code_client_encripted</codigo>
           <codigoC>$code_user_encripted</codigoC>
           <codigoCortesias>$code_cortesia_encripted</codigoCortesias>
+          <eventId>$eventId</eventId>
         </addCortesia>
       </soap:Body>
     </soap:Envelope>''';
@@ -729,6 +730,234 @@ class HttpDataSource implements IRemoteDataSource{
       }
     }
 
+  }
+
+  @override
+  Future<ResApiModel> getTokenPulsera(String code_version_encripted, String code_user_encripted) async {
+    String url_base = '$_url/wsIRC/wsCL.asmx';
+    print(url_base);
+    try{
+      //Future.delayed(Duration(seconds: 5));
+      //print('Entro al obtenecion de productos');
+
+      print(code_version_encripted);
+      String soap = '''<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <getTokenPulsera xmlns="http://tempuri.org/">
+      <k>$_keyAccess</k>
+      <codigoV>$code_version_encripted</codigoV>
+      <codigo>$code_user_encripted</codigo>
+    </getTokenPulsera>
+  </soap:Body>
+</soap:Envelope>''';
+
+      print(soap) ;
+      //Client c = http.Client();
+      final response = await _client.post(Uri.parse(url_base),
+        headers: {
+          'content-type': 'text/xml',
+          'SOAPAction': 'http://tempuri.org/getTokenPulsera',
+        },
+        body: utf8.encode(soap),
+      );
+      print(response.headers);
+      print(response.body);
+      if(response.statusCode == 200 ){
+        XmlDocument document = XmlDocument.parse(response.body);
+        String res = document.findAllElements("getTokenPulseraResponse").first.text;
+        print(res) ;
+        var json_res = jsonDecode(res);
+        print('Res Api getTokenPulsera HTTP: ${json_res}') ;
+
+
+        //return ResApiModel.fromMap(json_res);
+
+        switch(json_res['rcode']){
+          case 0:
+          //var msgDesc = Encriptacion().decryptDataD(json_res['msg']!, Encriptacion.keyVersion);
+          //var msgArr = msgDesc.split('|');
+          //String nameUser = msgArr[0];
+          //String balance = msgArr[1];
+            return ResApiModel(rcode: 0, message: json_res['msg']);
+
+          case 1:
+            return ResApiModel(rcode: 1, message: 'Error al obtener token');
+          default:
+
+            throw Failure(FailureStatus.request_process_error,FailureStatus.getMessage(FailureStatus.request_process_error));
+        }
+      }else {
+        throw Failure(response.statusCode,response.reasonPhrase!);
+      }
+    }on SocketException catch (_) {
+      throw Failure(FailureStatus.not_connection_internet, FailureStatus.getMessage(FailureStatus.not_connection_internet));
+    } on TimeoutException catch (_) {
+      throw Failure(FailureStatus.timeout, FailureStatus.getMessage(FailureStatus.timeout));
+    } on http.ClientException catch (e) {
+      throw Failure(FailureStatus.exception, e.message);
+    } catch(e){
+      if(e is Failure){
+        throw Failure(e.statusCode,e.toString());
+      }
+      else{
+        throw Failure(FailureStatus.exception,e.toString());
+      }
+    }
+  }
+
+  @override
+  Future<ResApiModel> validarBoleto(String code_version_encripted, String code_client_encripted, String code_user_encripted) async{
+    String url_base = '$_url/wsIRC/wsCL.asmx';
+    print(url_base);
+    try{
+      //Future.delayed(Duration(seconds: 5));
+      //print('Entro al obtenecion de productos');
+
+      print(code_version_encripted);
+      String soap = '''<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <validarBoletoHOV xmlns="http://tempuri.org/">
+      <k>$_keyAccess</k>
+      <codigoV>$code_version_encripted</codigoV>
+      <codigo>$code_client_encripted</codigo>
+      <codigoC>$code_user_encripted</codigoC>
+    </validarBoletoHOV>
+  </soap:Body>
+</soap:Envelope>''';
+
+
+      print(soap) ;
+      //Client c = http.Client();
+      final response = await _client.post(Uri.parse(url_base),
+        headers: {
+          'content-type': 'text/xml',
+          'SOAPAction': 'http://tempuri.org/validarBoletoHOV',
+        },
+        body: utf8.encode(soap),
+      );
+      print(response.headers);
+      print(response.body);
+      if(response.statusCode == 200 ){
+        XmlDocument document = XmlDocument.parse(response.body);
+        String res = document.findAllElements("validarBoletoHOVResponse").first.text;
+        print(res) ;
+        var json_res = jsonDecode(res);
+        print('Res Api getTokenPulsera HTTP: ${json_res}') ;
+
+
+        //return ResApiModel.fromMap(json_res);
+
+        switch(json_res['rcode']){
+          case 0:
+          //var msgDesc = Encriptacion().decryptDataD(json_res['msg']!, Encriptacion.keyVersion);
+          //var msgArr = msgDesc.split('|');
+          //String nameUser = msgArr[0];
+          //String balance = msgArr[1];
+            return ResApiModel(rcode: 0, message: json_res['msg'], balance: json_res['balance'], boletos: json_res['boletos']);
+
+          case 1:
+            return ResApiModel(rcode: 1, message:json_res['msg']);
+          default:
+
+            throw Failure(FailureStatus.request_process_error,FailureStatus.getMessage(FailureStatus.request_process_error));
+        }
+      }else {
+        throw Failure(response.statusCode,response.reasonPhrase!);
+      }
+    }on SocketException catch (_) {
+      throw Failure(FailureStatus.not_connection_internet, FailureStatus.getMessage(FailureStatus.not_connection_internet));
+    } on TimeoutException catch (_) {
+      throw Failure(FailureStatus.timeout, FailureStatus.getMessage(FailureStatus.timeout));
+    } on http.ClientException catch (e) {
+      throw Failure(FailureStatus.exception, e.message);
+    } catch(e){
+      if(e is Failure){
+        throw Failure(e.statusCode,e.toString());
+      }
+      else{
+        throw Failure(FailureStatus.exception,e.toString());
+      }
+    }
+  }
+
+  @override
+  Future<ResApiModel> accesToEvent(String code_version_encripted, String code_user_encripted, int userID, int codeVans) async {
+    String url_base = '$_url/wsIRC/wsCL.asmx';
+    print(url_base);
+    try{
+      //Future.delayed(Duration(seconds: 5));
+      //print('Entro al obtenecion de productos');
+
+
+
+      String soap = '''<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <accessToEvent xmlns="http://tempuri.org/">
+      <k>$_keyAccess</k>
+      <codigoV>$code_version_encripted</codigoV>
+      <codigoC>$code_user_encripted</codigoC>
+      <userID>$userID</userID>
+      <codeVans>$codeVans</codeVans>
+    </accessToEvent>
+  </soap:Body>
+</soap:Envelope>''';
+
+
+      print(soap) ;
+      //Client c = http.Client();
+      final response = await _client.post(Uri.parse(url_base),
+        headers: {
+          'content-type': 'text/xml',
+          'SOAPAction': 'http://tempuri.org/accessToEvent',
+        },
+        body: utf8.encode(soap),
+      );
+      print(response.headers);
+      print(response.body);
+      if(response.statusCode == 200 ){
+        XmlDocument document = XmlDocument.parse(response.body);
+        String res = document.findAllElements("accessToEventResponse").first.text;
+        print(res) ;
+        var json_res = jsonDecode(res);
+        print('Res Api getTokenPulsera HTTP: ${json_res}') ;
+
+
+        //return ResApiModel.fromMap(json_res);
+
+        switch(json_res['rcode']){
+          case 0:
+          //var msgDesc = Encriptacion().decryptDataD(json_res['msg']!, Encriptacion.keyVersion);
+          //var msgArr = msgDesc.split('|');
+          //String nameUser = msgArr[0];
+          //String balance = msgArr[1];
+            return ResApiModel(rcode: 0, message: json_res['msg'], balance: json_res['balance'], boletos: json_res['boletos']);
+
+          case 1:
+            return ResApiModel(rcode: 1, message:json_res['msg']);
+          default:
+
+            throw Failure(FailureStatus.request_process_error,FailureStatus.getMessage(FailureStatus.request_process_error));
+        }
+      }else {
+        throw Failure(response.statusCode,response.reasonPhrase!);
+      }
+    }on SocketException catch (_) {
+      throw Failure(FailureStatus.not_connection_internet, FailureStatus.getMessage(FailureStatus.not_connection_internet));
+    } on TimeoutException catch (_) {
+      throw Failure(FailureStatus.timeout, FailureStatus.getMessage(FailureStatus.timeout));
+    } on http.ClientException catch (e) {
+      throw Failure(FailureStatus.exception, e.message);
+    } catch(e){
+      if(e is Failure){
+        throw Failure(e.statusCode,e.toString());
+      }
+      else{
+        throw Failure(FailureStatus.exception,e.toString());
+      }
+    }
   }
 
 

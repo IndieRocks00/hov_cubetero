@@ -254,7 +254,7 @@ class _PuntoVentaActivityState extends State<PuntoVentaActivity> {
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18
                                 ),
-                                primary: ColorsIndie.colorGC2.getColor(),
+                                backgroundColor: ColorsIndie.colorGC2.getColor(),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 )
@@ -406,7 +406,7 @@ class _PuntoVentaActivityState extends State<PuntoVentaActivity> {
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18
                                 ),
-                                primary: ColorsIndie.colorGC2.getColor(),
+                                backgroundColor: ColorsIndie.colorGC2.getColor(),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 )
@@ -566,7 +566,7 @@ class _PuntoVentaActivityState extends State<PuntoVentaActivity> {
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18
                                 ),
-                                primary: ColorsIndie.colorGC2.getColor(),
+                                backgroundColor: ColorsIndie.colorGC2.getColor(),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 )
@@ -737,7 +737,7 @@ class _PuntoVentaActivityState extends State<PuntoVentaActivity> {
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18
                                 ),
-                                primary: ColorsIndie.colorgris.getColor(),
+                                backgroundColor: ColorsIndie.colorgris.getColor(),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 )
@@ -770,7 +770,7 @@ class _PuntoVentaActivityState extends State<PuntoVentaActivity> {
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18
                                 ),
-                                primary: ColorsIndie.colorgris.getColor(),
+                                backgroundColor: ColorsIndie.colorgris.getColor(),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 )
@@ -808,7 +808,7 @@ class _PuntoVentaActivityState extends State<PuntoVentaActivity> {
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18
                                 ),
-                                primary: ColorsIndie.colorgris.getColor(),
+                                backgroundColor: ColorsIndie.colorgris.getColor(),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 )
@@ -841,7 +841,7 @@ class _PuntoVentaActivityState extends State<PuntoVentaActivity> {
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18
                                 ),
-                                primary: ColorsIndie.colorgris.getColor(),
+                                backgroundColor: ColorsIndie.colorgris.getColor(),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 )
@@ -871,7 +871,7 @@ class _PuntoVentaActivityState extends State<PuntoVentaActivity> {
                         maxLines: 1,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
-                          CurrencyTextInputFormatter(locale: 'en', symbol: '\$'),
+                          CurrencyTextInputFormatter.currency(locale: 'en', symbol: '\$'),
                         ],
                         keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
@@ -1138,7 +1138,7 @@ class _PuntoVentaActivityState extends State<PuntoVentaActivity> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18
                             ),
-                            primary: ColorsIndie.colorGC1.getColor(),
+                            backgroundColor: ColorsIndie.colorGC1.getColor(),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             )
@@ -1169,7 +1169,7 @@ class _PuntoVentaActivityState extends State<PuntoVentaActivity> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18
                             ),
-                            primary: ColorsIndie.colorgris.getColor(),
+                            backgroundColor: ColorsIndie.colorgris.getColor(),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             )
@@ -1226,7 +1226,7 @@ class _PuntoVentaActivityState extends State<PuntoVentaActivity> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18
                             ),
-                            primary: ColorsIndie.colorgris.getColor(),
+                            backgroundColor: ColorsIndie.colorgris.getColor(),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             )
@@ -1322,7 +1322,7 @@ class _PuntoVentaActivityState extends State<PuntoVentaActivity> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18
                             ),
-                            primary: ColorsIndie.colorgris.getColor(),
+                            backgroundColor: ColorsIndie.colorgris.getColor(),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             )
@@ -1383,7 +1383,7 @@ class _PuntoVentaActivityState extends State<PuntoVentaActivity> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18
                             ),
-                            primary: ColorsIndie.colorGC3.getColor(),
+                            backgroundColor: ColorsIndie.colorGC3.getColor(),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             )

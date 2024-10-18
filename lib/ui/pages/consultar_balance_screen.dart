@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:indierocks_cubetero/core/colors/AppColors.dart';
+import 'package:indierocks_cubetero/core/images/AppImages.dart';
 import 'package:indierocks_cubetero/core/providers/api/api_provider.dart';
 import 'package:indierocks_cubetero/core/providers/api/api_state.dart'as api_state;
 import 'package:indierocks_cubetero/core/providers/sql/sql_provider.dart';
@@ -137,9 +138,7 @@ class ConsultaBalanceScreenState extends ConsumerState<ConsultaBalanceScreen> {
                       children: [
                         Expanded(flex: 2,child:
                         Center(
-                          child: Image.asset("assets/images/foro_ir_white.png",
-                            height: 80,
-                          ),
+                          child: AppImages.getLogowhite(MediaQuery.of(context).size.width - 100, 80)
                         ),
                         ),
                       ],
@@ -182,7 +181,7 @@ class ConsultaBalanceScreenState extends ConsumerState<ConsultaBalanceScreen> {
                   ).showdialog();
                 }
               }, // Icono del botón flotante
-              backgroundColor: AppColors.primaryColor,
+              backgroundColor: AppColors.secondaryColor,
               child: Image.asset("assets/images/scanqr.png",
                 height: 25,
               ),

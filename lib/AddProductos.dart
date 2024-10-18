@@ -142,7 +142,7 @@ class _AddProductosState extends State<AddProductos> {
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18
                                 ),
-                                primary: ColorsIndie.colorGC2.getColor(),
+                                backgroundColor: ColorsIndie.colorGC2.getColor(),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 )
@@ -293,7 +293,7 @@ class _AddProductosState extends State<AddProductos> {
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18
                                 ),
-                                primary: ColorsIndie.colorGC2.getColor(),
+                                backgroundColor: ColorsIndie.colorGC2.getColor(),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 )
@@ -448,7 +448,7 @@ class _AddProductosState extends State<AddProductos> {
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18
                                 ),
-                                primary: ColorsIndie.colorGC2.getColor(),
+                                backgroundColor: ColorsIndie.colorGC2.getColor(),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 )

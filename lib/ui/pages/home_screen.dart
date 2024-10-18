@@ -111,6 +111,7 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                     DialogScanHandler(
                         process: ProcessType.READ_PULSERA,
                         parentContext: context,
+                        eventId: '0',
                         dataCallback: (data, banco) {
                           print('Data_leido Escaner Cliente: $data');
 

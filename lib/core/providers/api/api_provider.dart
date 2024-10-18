@@ -19,6 +19,7 @@ import 'package:http/http.dart' as http;
 export 'api_state.dart' show Initial, Loading, ApiAvailable, Error;
 
 part 'api_state_notifier.dart';
+part 'acces_to_event_notifier.dart';
 
 
 final apiNotiier = StateNotifierProvider<ApiStateNotifier,ApiState>((ref){
@@ -30,6 +31,13 @@ final apiNotiier = StateNotifierProvider<ApiStateNotifier,ApiState>((ref){
       venta: ref.watch(_venta),
       addCortesia: ref.watch(_addCortesia),
       removeCortesia: ref.watch(_removeCortesia),
+      getTokenPulsera: ref.watch(_getTokenPulsera),
+      validarBoleto: ref.watch(_validarBoleto),
+  );
+});
+final accesToEventNotifier = StateNotifierProvider<AccesToEventNotifier,ApiState>((ref){
+  return AccesToEventNotifier(
+    accesToEvent: ref.watch(_accesToEvent),
   );
 });
 
@@ -73,7 +81,16 @@ final _addCortesia = Provider<AddCortesia>((ref) {
 final _removeCortesia = Provider<RemoveCortesia>((ref) {
   return RemoveCortesia(repository: ref.watch(_userRepository));
 });
+final _getTokenPulsera= Provider<GetTokenPulsera>((ref) {
+  return GetTokenPulsera(repository: ref.watch(_userRepository));
+});
+final _validarBoleto= Provider<ValidarBoleto>((ref) {
+  return ValidarBoleto(repository: ref.watch(_userRepository));
+});
 
+final _accesToEvent= Provider<AccesToEvent>((ref) {
+  return AccesToEvent(repository: ref.watch(_userRepository));
+});
 
 
 

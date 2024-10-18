@@ -242,7 +242,7 @@ class _OrderActivityState extends State<OrderActivity> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18
                             ),
-                            primary: ColorsIndie.colorGC1.getColor(),
+                            backgroundColor: ColorsIndie.colorGC1.getColor(),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             )
@@ -273,7 +273,7 @@ class _OrderActivityState extends State<OrderActivity> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18
                             ),
-                            primary: ColorsIndie.colorgris.getColor(),
+                            backgroundColor: ColorsIndie.colorgris.getColor(),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             )
@@ -330,7 +330,7 @@ class _OrderActivityState extends State<OrderActivity> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18
                             ),
-                            primary: ColorsIndie.colorgris.getColor(),
+                            backgroundColor: ColorsIndie.colorgris.getColor(),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             )
@@ -426,7 +426,7 @@ class _OrderActivityState extends State<OrderActivity> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18
                             ),
-                            primary: ColorsIndie.colorgris.getColor(),
+                            backgroundColor: ColorsIndie.colorgris.getColor(),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             )
@@ -487,7 +487,7 @@ class _OrderActivityState extends State<OrderActivity> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18
                             ),
-                            primary: ColorsIndie.colorGC3.getColor(),
+                            backgroundColor: ColorsIndie.colorGC3.getColor(),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             )
@@ -1019,7 +1019,7 @@ class _AlertOrderState extends State<AlertOrder> {
                             fontWeight: FontWeight.bold,
                             fontSize: 18
                         ),
-                        primary: ColorsIndie.colorGC1.getColor(),
+                        backgroundColor: ColorsIndie.colorGC1.getColor(),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         )
@@ -1050,7 +1050,7 @@ class _AlertOrderState extends State<AlertOrder> {
                             fontWeight: FontWeight.bold,
                             fontSize: 18
                         ),
-                        primary: ColorsIndie.colorGC1.getColor(),
+                        backgroundColor: ColorsIndie.colorGC1.getColor(),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         )

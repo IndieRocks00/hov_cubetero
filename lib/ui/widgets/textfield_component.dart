@@ -45,22 +45,24 @@ class _TextfieldComponentState extends State<TextfieldComponent> {
       child: TextField(
         controller: widget.controller,
         maxLines: 1,
-        obscureText: widget._isObscure,
+        obscureText: widget.obscureText?widget._isObscure:false,
         keyboardType: widget.textInputType,
+        style: TextStyle(color: AppColors.backgroundColor,),
         decoration: InputDecoration(
             hintText: widget.hint_label,
+            hintStyle: TextStyle(color: AppColors.backgroundColor,),
             filled: true,
             fillColor: AppColors.textfield_background,
-            prefixIcon: widget.icon != null ? Icon(widget.icon) : SizedBox(),
+            prefixIcon: widget.icon != null ? Icon(widget.icon, color: AppColors.backgroundColor,) : SizedBox(),
             suffixIcon: widget.obscureText ? IconButton(
-              icon:  Icon(widget._isObscure ? Icons.visibility : Icons.visibility_off),
+              icon:  Icon(widget.obscureText ? Icons.visibility : Icons.visibility_off, color: AppColors.backgroundColor,),
               onPressed: () {
                 setState(() {
                   var pass = widget._isObscure;
                   widget._isObscure  = !pass ;
                 });
               },
-            ) : SizedBox(),
+            ) : null,
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(5),
                 borderSide: const BorderSide(

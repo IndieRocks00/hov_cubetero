@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   static const Color primaryColor = Color(0xff000000);
+  static const Color secondaryColor = Color(0xFFD51920);
   static const Color accentColor = Color(0xff93969E);
-  static const Color backgroundColor = Color(0xFFF2F2F2);
+  static const Color backgroundColor = Color(0xFFF6FAFA);
   static const Color textColor = Color(0xFF333333);
   static const Color appBarrColor = Color(0xFF000000);
   static const Color textAppBarColor = Color(0xFFF2F2F2);
@@ -11,6 +12,7 @@ class AppColors {
   static const Color textColorLoadingScreen = Color(0xFFF2F2F2);
 // Añade más colores según lo necesites
 
+  static const Color background_general_second = Color(0xff93969E);
 
   static const Color alert_error = Colors.red;
   static const Color textColorError = Colors.white;
@@ -22,7 +24,7 @@ class AppColors {
   static const Color textColorOk = Colors.white;
 
 
-  static const Color textfield_background = Color(0xff79DEA8);
+  static const Color textfield_background = Color(0xFFFF3F48);
 
 
   static const Color backgCardProdSelect = Color(0xff525452);

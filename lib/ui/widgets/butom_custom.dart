@@ -17,7 +17,7 @@ class ButtomCustom extends StatefulWidget {
     Key? key,
     required this.text,
     required this.onPressed,
-    this.background = AppColors.primaryColor,
+    this.background = AppColors.secondaryColor,
     this.textColor = AppColors.backgroundColor,
     this.margin = const EdgeInsets.only(left: 40,right: 40, top: 30),
     this.radius = 12,
@@ -34,6 +34,7 @@ class _ButtomCustomState extends State<ButtomCustom> {
     return Container(
         width: MediaQuery.of(context).size.width,
         height: 55,
+        padding: EdgeInsets.only(top:5),
         margin: widget.margin ,
         decoration: const BoxDecoration(
             boxShadow: [
@@ -47,11 +48,13 @@ class _ButtomCustomState extends State<ButtomCustom> {
         child: ElevatedButton(onPressed: widget.onPressed,
           style: ElevatedButton.styleFrom(
               textStyle:  TextStyle(color: widget.textColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                fontFamily: 'Helvetica',
               ),
-              primary: widget.background,
-              onPrimary: widget.textColor,
+              alignment: Alignment.center,
+              backgroundColor: widget.background,
+              foregroundColor: widget.textColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(widget.radius),
               )

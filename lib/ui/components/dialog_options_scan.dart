@@ -36,12 +36,12 @@ class DialogOptionScan {
         context: _context,
         builder: (context){
           return  SimpleDialog(
-            backgroundColor: AppColors.backgroundColor,
+            backgroundColor: AppColors.background_general_second,
             title: Text("¿Que deseas usar?"),
             children: [
               SimpleDialogOption(
                 onPressed: () async {
-                  print('Inicio de escaner qe');
+                  print('Inicio de escaner qr');
                   bool permisos = await PermisosHelper().helperPermisos(PermisosType.CAMERA);
                   if (!permisos){
                     SnackbarCustom(

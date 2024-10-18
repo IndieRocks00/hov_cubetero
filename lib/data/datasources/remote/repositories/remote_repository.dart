@@ -20,8 +20,14 @@ abstract class IRemoteDataSource{
 
   Future<List<CortesiaModel>> getOptionsCortesia(String code_version_encripted,String code_user_encripted);
 
-  Future<ResApiModel> addCortesia(String code_version_encripted,String code_client_encripted,String code_user_encripted,String code_cortesia_encripted);
+  Future<ResApiModel> addCortesia(String code_version_encripted,String code_client_encripted,String code_user_encripted,String code_cortesia_encripted, int eventId);
 
   Future<ResApiModel> removeCortesia(String code_version_encripted,String code_client_encripted,String code_user_encripted);
+
+  Future<ResApiModel> getTokenPulsera(String code_version_encripted,String code_user_encripted);
+
+  Future<ResApiModel> validarBoleto(String code_version_encripted,String code_client_encripted,String code_user_encripted);
+
+  Future<ResApiModel> accesToEvent(String code_version_encripted,String code_user_encripted, int userID, int codeVans);
 
 }

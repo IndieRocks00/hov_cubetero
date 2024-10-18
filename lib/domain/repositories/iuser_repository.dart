@@ -29,8 +29,13 @@ abstract class IUserRepository{
 
   Future<Either<Failure,List<CortesiaModel>>> getOptionsCortesia(String code_user_encripted);
 
-  Future<Either<Failure,ResApiModel>> addCortesia(String code_client_encripted,String code_user_encripted,String json_cortesias);
+  Future<Either<Failure,ResApiModel>> addCortesia(String code_client_encripted,String code_user_encripted,String json_cortesias,String  eventId);
 
   Future<Either<Failure,ResApiModel>> removeCortesia(String code_client_encripted,String code_user_encripted);
 
+  Future<Either<Failure,ResApiModel>> getTokenPulsera(String code_user_encripted);
+
+  Future<Either<Failure,ResApiModel>> validarBoleto(String code_client_encripted,String code_user_encripted);
+
+  Future<Either<Failure,ResApiModel>> accesToEvent(String code_user_encripted, int userID, int codeVans);
 }

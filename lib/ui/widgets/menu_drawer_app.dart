@@ -1,11 +1,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:indierocks_cubetero/core/colors/AppColors.dart';
 import 'package:indierocks_cubetero/core/providers/providers.dart';
 import 'package:indierocks_cubetero/core/providers/sql/sql_provider.dart';
 import 'package:indierocks_cubetero/core/routes/AppRoute.dart';
 
+import '../../Utils/Tools.dart';
+
 class MenuDrawerApp extends ConsumerStatefulWidget {
+
   const MenuDrawerApp({Key? key}) : super(key: key);
 
   @override
@@ -17,6 +21,7 @@ class MenuDrawerAppState extends ConsumerState<MenuDrawerApp> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      backgroundColor: AppColors.background_general_second,
       width: MediaQuery.of(context).size.width/1.8,
       child: Column(
         children: [
@@ -44,7 +49,44 @@ class MenuDrawerAppState extends ConsumerState<MenuDrawerApp> {
                 title: const Text("Agregar Cortesias"),
                 leading: const Icon(Icons.add_circle),
                 onTap: (){
-                  Navigator.pushReplacementNamed(context, AppPageRoutes.ADD_CORTESIAS.getPage());
+
+                  var userOperativo = ref.read(userLogued.notifier).state;
+                  //name = 'hov_cortesias';
+                  if(userOperativo?.user == 'hov_cortesias'){
+
+                    Navigator.pushReplacementNamed(context, AppPageRoutes.ADD_CORTESIAS.getPage());
+                  }
+                  else{
+                    Tools().showMessageBox(context, "No tienes acceso a este modulo");
+                  }
+                  //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => ConsultarBalance(),), (route) => false);
+                },
+              ),
+
+              ListTile(
+                title: const Text("Pulseras"),
+                leading: const Icon(Icons.nfc),
+                onTap: (){
+
+                  var userOperativo = ref.read(userLogued.notifier).state;
+                  //name = 'hov_cortesias';
+                  if(userOperativo?.user == 'hov_cortesias'){
+
+                    Navigator.pushReplacementNamed(context, AppPageRoutes.TOKEN_PULSERAS.getPage());
+                  }
+                  else{
+                    Tools().showMessageBox(context, "No tienes acceso a este modulo");
+                  }
+                  //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => ConsultarBalance(),), (route) => false);
+                },
+              ),
+              ListTile(
+                title: const Text("Boletos"),
+                leading: const Icon(Icons.turned_in_outlined),
+                onTap: (){
+
+
+                  Navigator.pushReplacementNamed(context, AppPageRoutes.VALIDAR_BOLETO.getPage());
                   //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => ConsultarBalance(),), (route) => false);
                 },
               ),

@@ -15,25 +15,30 @@ class DialogScanHandler{
 
   final BuildContext parentContext;
   final ProcessType process;
+  final List<dynamic> json_cortesia;
+  final String eventId;
   final Function(String data, BankType banco)? dataCallback;
   DialogScanHandler({
     required this.parentContext,
     required this.process,
+    this.json_cortesia = const [],
     this.dataCallback,
+    this.eventId = '0'
   });
 
 
   Future<void> showDialogOption() async{
+    print('json_cortesias: $json_cortesia');
     await showDialog(
         context: parentContext,
         builder: (context){
           return  SimpleDialog(
-            backgroundColor: AppColors.backgroundColor,
+            backgroundColor: AppColors.background_general_second,
             title: Text("¿Que deseas usar?"),
             children: [
               SimpleDialogOption(
                 onPressed: () async {
-                  print('Inicio de escaner qe');
+                  print('Inicio de escaner qr');
                   bool permisos = await PermisosHelper().helperPermisos(PermisosType.CAMERA);
                   print('Permisos de camera: ${permisos}');
                   if (!permisos){
@@ -50,13 +55,17 @@ class DialogScanHandler{
 
                   showDialog(context: context,
                       barrierDismissible: false, builder: (context){
-                        return  ScanController(process: ProcessType.READ_PULSERA,
-                          json_cortesia: [],
+                        return  ScanController(process: process,
+                          json_cortesia: json_cortesia,
                           onDataChange: (data) {
                             dataCallback!(data, BankType.QR);
                           },
+                          onCancel: () {
+
+                          }, eventId: eventId,
                         );
                       }).whenComplete(() {
+
                         if(Navigator.of(context).canPop()){
                           Navigator.of(context).pop();
                         }
@@ -69,9 +78,10 @@ class DialogScanHandler{
                 onPressed: () async {
                   print('Scaneo de NFC');
 
+                  print('json_cortesias: $json_cortesia');
                   showDialog(context: context,
                       barrierDismissible: false, builder: (context){
-                        return NFCController(process: process,
+                        /*return NFCController(process: process,
                           json_cortesia: [],
                           onDataChange: (data) {
                             dataCallback!(data, BankType.NFC);
@@ -79,7 +89,20 @@ class DialogScanHandler{
                             print('data');
                           },
                           onCancel: () {
+
+                            if(Navigator.of(context).canPop()){
+                              Navigator.of(context).pop();
+                            }
+                          },
+                        );*/
+                        return NFCController(process: process,
+                          json_cortesia: json_cortesia,
+                          onDataChange: (data) {
+
+                            dataCallback!(data, BankType.NFC);
                             Navigator.of(context).pop();
+
+                            print('Data Devuelto de lectura : ${data}');
                           },
                         );
                       });

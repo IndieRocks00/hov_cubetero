@@ -16,6 +16,7 @@ class FailureStatus{
   static const int monto_incorrecto             = -12;
   static const int referencia_invalida          = -13;
   static const int timeout                      = -14;
+  static const int eventIdNotValid              = -15;
 
   static String getMessage(int statusCode) {
     switch (statusCode) {
@@ -47,6 +48,8 @@ class FailureStatus{
         return "La referencia es invalida. Verifica";
       case FailureStatus.timeout:
         return "La solicitud excedio el tiempo de espera";
+      case FailureStatus.eventIdNotValid:
+        return "Id del evento no valido. Verifica";
       default:
         return 'message';
     }

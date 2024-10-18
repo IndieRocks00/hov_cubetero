@@ -60,7 +60,8 @@ class UserRepository implements IUserRepository{
     String version_app = await _versionAppRepository.getVersionApp();
     String encript_version = _encriptionMd5Repository.encryptData(version_app, _keyIdVer);
     String encript_user = _encriptionMd5Repository.encryptData('$user|$pass', _keyVersion);
-
+    bool resConection = await _networkManager.isConnected();
+    print('res conection: ' + resConection.toString());
     if(await _networkManager.isConnected()){
       try{
         final resApi = await _remoteDataSource.doLogin(encript_version, encript_user);
@@ -455,7 +456,7 @@ class UserRepository implements IUserRepository{
 
     //return Right(ResApiModel(rcode: 1,message: 'Venta realizada correctamente'));
     print(total);
-    await Future.delayed(Duration(seconds: 5));
+    //await Future.delayed(Duration(seconds: 5));
     if(code_client_encripted.isEmpty || code_client_encripted == ''){
       return Left(Failure(FailureStatus.error_data_escaneado,FailureStatus.getMessage(FailureStatus.error_data_escaneado)));
     }
@@ -545,7 +546,7 @@ class UserRepository implements IUserRepository{
   }
 
   @override
-  Future<Either<Failure, ResApiModel>> addCortesia(String code_client_encripted, String code_user_encripted, String json_cortesias) async{
+  Future<Either<Failure, ResApiModel>> addCortesia(String code_client_encripted, String code_user_encripted, String json_cortesias, String eventId) async{
     print('Entro a add cortesia');
     if(code_client_encripted.isEmpty || code_client_encripted == ''){
       return Left(Failure(FailureStatus.error_data_escaneado,FailureStatus.getMessage(FailureStatus.error_data_escaneado)));
@@ -553,7 +554,13 @@ class UserRepository implements IUserRepository{
     if(code_user_encripted.isEmpty || code_user_encripted == ''){
       return Left(Failure(FailureStatus.error_data_user_logeado,FailureStatus.getMessage(FailureStatus.error_data_user_logeado)));
     }
-
+    int Event_ID = 0;
+    try{
+      Event_ID = int.parse(eventId);
+    }catch(e){
+      print('monto exception');
+      return Left(Failure(FailureStatus.eventIdNotValid,FailureStatus.getMessage(FailureStatus.eventIdNotValid)));
+    }
     /*if(json_cortesias.isEmpty || json_cortesias == ''){
       return Left(Failure(FailureStatus.error_data_user_logeado,FailureStatus.getMessage(FailureStatus.error_data_user_logeado)));
     }*/
@@ -572,7 +579,7 @@ class UserRepository implements IUserRepository{
     print('json_cortesia encriptado: ${cortesia_encripted}');
     if(await _networkManager.isConnected()){
       try{
-        final resApi = await _remoteDataSource.addCortesia(encript_version,client,code_user_encripted,cortesia_encripted);
+        final resApi = await _remoteDataSource.addCortesia(encript_version,client,code_user_encripted,cortesia_encripted, Event_ID);
         return Right(resApi);
         switch(resApi.rcode){
           case 0:
@@ -659,6 +666,158 @@ class UserRepository implements IUserRepository{
       return Left(Failure(FailureStatus.not_connection_internet,FailureStatus.getMessage(FailureStatus.not_connection_internet)));
     }
   }
+
+  @override
+  Future<Either<Failure, ResApiModel>> getTokenPulsera(String code_user_encripted) async{
+    print('Entro a remover cortesia');
+
+    if(code_user_encripted.isEmpty || code_user_encripted == ''){
+      return Left(Failure(FailureStatus.error_data_user_logeado,FailureStatus.getMessage(FailureStatus.error_data_user_logeado)));
+    }
+
+
+    String version_app = await _versionAppRepository.getVersionApp();
+    String encript_version = _encriptionMd5Repository.encryptData(version_app, _keyIdVer);
+    print(version_app);
+    print(encript_version);
+    if(await _networkManager.isConnected()){
+      try{
+        final resApi = await _remoteDataSource.getTokenPulsera(encript_version,code_user_encripted);
+        return Right(resApi);
+        switch(resApi.rcode){
+          case 0:
+          //var msgDesc = _encriptionMd5Repository.desencryptData(resApi.message, _keyVersion);
+          //var msgArr = msgDesc.split('|');
+          //String nameUser = msgArr[0];
+          //String balance = msgArr[1];
+
+            return Right(ResApiModel(rcode: 0,message: 'Venta realizada correctamente'));
+          case 1:
+            return Right(ResApiModel(rcode: 1,message: resApi.message));
+          default:
+
+            return Left(Failure(FailureStatus.request_process_error,FailureStatus.getMessage(FailureStatus.request_process_error)));
+        }
+
+      }catch(e ){
+        print(e);
+        if(e is Failure){
+          return Left(Failure(e.statusCode,e.toString()));
+        }
+        else{
+          //print('user repository Exception');
+          return Left(Failure(FailureStatus.exception,e.toString()));
+        }
+      }
+    }
+    else{
+      return Left(Failure(FailureStatus.not_connection_internet,FailureStatus.getMessage(FailureStatus.not_connection_internet)));
+    }
+  }
+
+  @override
+  Future<Either<Failure, ResApiModel>> validarBoleto(String code_client_encripted, String code_user_encripted) async {
+
+
+    if(code_client_encripted.isEmpty || code_client_encripted == ''){
+      return Left(Failure(FailureStatus.error_data_escaneado,FailureStatus.getMessage(FailureStatus.error_data_escaneado)));
+    }
+    if(code_user_encripted.isEmpty || code_user_encripted == ''){
+      return Left(Failure(FailureStatus.error_data_user_logeado,FailureStatus.getMessage(FailureStatus.error_data_user_logeado)));
+    }
+
+    var arrayUser = code_client_encripted.split('|');
+    if(arrayUser.length != 2){
+      return Left(Failure(FailureStatus.error_data_escaneado,FailureStatus.getMessage(FailureStatus.error_data_escaneado)));
+    }
+    String client = arrayUser[1];
+    print(client);
+
+    String version_app = await _versionAppRepository.getVersionApp();
+    String encript_version = _encriptionMd5Repository.encryptData(version_app, _keyIdVer);
+    print(version_app);
+    print(encript_version);
+    if(await _networkManager.isConnected()){
+      try{
+        final resApi = await _remoteDataSource.validarBoleto(encript_version,client,code_user_encripted);
+        return Right(resApi);
+        switch(resApi.rcode){
+          case 0:
+          //var msgDesc = _encriptionMd5Repository.desencryptData(resApi.message, _keyVersion);
+          //var msgArr = msgDesc.split('|');
+          //String nameUser = msgArr[0];
+          //String balance = msgArr[1];
+
+            return Right(ResApiModel(rcode: 0,message: 'Venta realizada correctamente'));
+          case 1:
+            return Right(ResApiModel(rcode: 1,message: resApi.message));
+          default:
+
+            return Left(Failure(FailureStatus.request_process_error,FailureStatus.getMessage(FailureStatus.request_process_error)));
+        }
+
+      }catch(e ){
+        if(e is Failure){
+          return Left(Failure(e.statusCode,e.toString()));
+        }
+        else{
+          //print('user repository Exception');
+          return Left(Failure(FailureStatus.exception,e.toString()));
+        }
+      }
+    }
+    else{
+      return Left(Failure(FailureStatus.not_connection_internet,FailureStatus.getMessage(FailureStatus.not_connection_internet)));
+    }
+  }
+
+  @override
+  Future<Either<Failure, ResApiModel>> accesToEvent(String code_user_encripted, int userID, int codeVans) async{
+
+
+    if(code_user_encripted.isEmpty || code_user_encripted == ''){
+      return Left(Failure(FailureStatus.error_data_user_logeado,FailureStatus.getMessage(FailureStatus.error_data_user_logeado)));
+    }
+
+
+    String version_app = await _versionAppRepository.getVersionApp();
+    String encript_version = _encriptionMd5Repository.encryptData(version_app, _keyIdVer);
+    print(version_app);
+    print(encript_version);
+    if(await _networkManager.isConnected()){
+      try{
+        final resApi = await _remoteDataSource.accesToEvent(encript_version,code_user_encripted, userID, codeVans);
+        return Right(resApi);
+        switch(resApi.rcode){
+          case 0:
+          //var msgDesc = _encriptionMd5Repository.desencryptData(resApi.message, _keyVersion);
+          //var msgArr = msgDesc.split('|');
+          //String nameUser = msgArr[0];
+          //String balance = msgArr[1];
+
+            return Right(ResApiModel(rcode: 0,message: 'Venta realizada correctamente'));
+          case 1:
+            return Right(ResApiModel(rcode: 1,message: resApi.message));
+          default:
+
+            return Left(Failure(FailureStatus.request_process_error,FailureStatus.getMessage(FailureStatus.request_process_error)));
+        }
+
+      }catch(e ){
+        if(e is Failure){
+          return Left(Failure(e.statusCode,e.toString()));
+        }
+        else{
+          //print('user repository Exception');
+          return Left(Failure(FailureStatus.exception,e.toString()));
+        }
+      }
+    }
+    else{
+      return Left(Failure(FailureStatus.not_connection_internet,FailureStatus.getMessage(FailureStatus.not_connection_internet)));
+    }
+  }
+
 
 
 }

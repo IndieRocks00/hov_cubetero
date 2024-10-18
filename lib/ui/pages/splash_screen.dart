@@ -9,8 +9,10 @@ import 'package:indierocks_cubetero/core/providers/sql/sql_provider.dart';
 import 'package:indierocks_cubetero/core/providers/sql/sql_user_state.dart' as sql_user_state;
 import 'package:indierocks_cubetero/core/routes/AppRoute.dart';
 import 'package:indierocks_cubetero/data/models/user_model.dart';
+import 'package:indierocks_cubetero/images/AppImages.dart';
 import 'package:indierocks_cubetero/ui/pages/home_screen.dart';
 import 'package:indierocks_cubetero/ui/pages/login_screen.dart';
+import 'package:indierocks_cubetero/ui/widgets/loading_widget.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -114,10 +116,12 @@ class SplashScreenSate extends ConsumerState<SplashScreen> {
             title: "HOV Cubetero",
             onGenerateRoute: AppRouter().generateRoute,
             theme: ThemeData(
+              fontFamily: 'Helvetica',
               primaryColor: AppColors.primaryColor,
               colorScheme: ColorScheme.fromSwatch().copyWith(
                 secondary: AppColors.primaryColor,
                 primary: AppColors.backgroundColor,
+                background: AppColors.backgroundColor,
               ),
               appBarTheme: AppBarTheme(
                   color: AppColors.primaryColor,
@@ -128,7 +132,6 @@ class SplashScreenSate extends ConsumerState<SplashScreen> {
                 color: AppColors.backgroundColor,
               ),
 
-              backgroundColor: AppColors.backgroundColor,
             ),
             home: snapshot.data ?? LoginScreen(),
             // Resto de la configuración MaterialApp
@@ -139,10 +142,12 @@ class SplashScreenSate extends ConsumerState<SplashScreen> {
             title: "HOV Cubetero",
             onGenerateRoute: AppRouter().generateRoute,
             theme: ThemeData(
+              fontFamily: 'Helvetica',
               primaryColor: AppColors.backgroundColor,
               colorScheme: ColorScheme.fromSwatch().copyWith(
                 secondary: AppColors.backgroundColor,
                 primary: AppColors.backgroundColor,
+                background: AppColors.backgroundColor,
               ),
               appBarTheme: AppBarTheme(
                   color: AppColors.primaryColor,
@@ -153,25 +158,17 @@ class SplashScreenSate extends ConsumerState<SplashScreen> {
                 color: AppColors.backgroundColor,
               ),
 
-              backgroundColor: AppColors.backgroundColor,
             ),
             home: Scaffold(
               body: Column(
                 children: [
                   Spacer(),
                   Center(
-                    child: Image.asset(
-                      "assets/images/foro_ir_white.png",
-                      width: MediaQuery.of(context).size.width - 100,
-                      height: 70,
-                    ),
+                    child: AppImages.getLogoBlack(MediaQuery.of(context).size.width - 100, 70),
                   ),
                   const Spacer(),
                   const Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.alert_information,
-                    ),
-                  ),
+                    child: LoadingWidget(),),
                   Spacer(),
                 ],
               ),
